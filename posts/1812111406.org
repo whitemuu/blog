@@ -1,0 +1,45 @@
+#+TITLE: asymptotic analysis
+#+AUTHOR: angus zhang
+#+DATE: 2018-12-11T14:06:15CST
+#+TAGS: asymptotic algorithm big-O
+
+asymptotic(渐近线) analysis | big-X
+these are mathematics notions; In *CS* we only use big-Oh, which is actually big-Θ in mathematics.
+
+* Bachmann–Landau notations
+Family of Bachmann–Landau notations
+o(X) -- The algorithm won't take longer than X
+O(X) -- The algorithm won't take longer than X, give or take a constant multiplier
+Θ(X) -- The algorithm will  take as long as  X, give or take a constant multiplier <- best description if possible
+ω(X) -- The algorithm will  take longer than X
+Ω(X) -- The algorithm will  take longer than X, give or take a constant multiplier  i.e. best-case | lower bound
+
+** Venn's diagram
+Venn's diagram
+┌──────────────────────┐
+│   O(g(n))    ┌───────┼──────────────┐        
+│              │       │   Ω(g(n))    │        
+│  ┌─────────┐ │       │              │
+│  │ o(g(n)) │ │Θ(g(n))│ ┌─────────┐  │
+│  └─────────┘ │       │ │ ω(g(n)) │  │
+└──────────────┼───────┘ └─────────┘  │
+               └──────────────────────┘
+
+#+BEGIN_SRC java
+  public static void countDown(int start, int delay) {
+      ActionListener listener = event -> {
+          start--; // Error: Can't mutate captured variable
+          System.out.println(start);
+      };
+      new Timer(delay, listener).start();
+  }
+#+END_SRC
+
+* big-theta
+Ө(g(x)) is a *set* of functions.
+big-Θ -- tight bound; both upper and lower bound(precise, but diﬃcult to compute)
+Ө(g(x)) = {f(x) such that there exist positive constants c1, c2, N such that 0<=c1*g(x)<=f(x)<=c2*g(x) for all x>N}
+The Big-Theta notation is symmetric: f(x) = Ө(g(x)) <=> g(x) = Ө(f(x))
+
+we could write f(x) ∈ Ө(g(x))
+but more commonly f(x) = Ө(g(x))
