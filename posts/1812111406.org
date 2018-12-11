@@ -8,7 +8,7 @@ these are mathematics notions; In *CS* we only use big-Oh, which is actually big
 
 * Bachmann–Landau notations
 Family of Bachmann–Landau notations
-o(X) -- The algorithm won't take longer than X
+o(X) -- The algorithm won't take longer than X \\
 O(X) -- The algorithm won't take longer than X, give or take a constant multiplier
 Θ(X) -- The algorithm will  take as long as  X, give or take a constant multiplier <- best description if possible
 ω(X) -- The algorithm will  take longer than X
@@ -16,6 +16,7 @@ O(X) -- The algorithm won't take longer than X, give or take a constant multipli
 
 ** Venn's diagram
 Venn's diagram
+#+BEGIN_SRC
 ┌──────────────────────┐
 │   O(g(n))    ┌───────┼──────────────┐        
 │              │       │   Ω(g(n))    │        
@@ -24,6 +25,7 @@ Venn's diagram
 │  └─────────┘ │       │ │ ω(g(n)) │  │
 └──────────────┼───────┘ └─────────┘  │
                └──────────────────────┘
+#+END_SRC
 
 #+BEGIN_SRC java
   public static void countDown(int start, int delay) {
