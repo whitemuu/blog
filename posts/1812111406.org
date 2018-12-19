@@ -1,18 +1,21 @@
 #+TITLE: asymptotic analysis
 #+AUTHOR: angus zhang
 #+DATE: 2018-12-11T14:06:15CST
+#+OPTIONS: \n:t
 #+TAGS: asymptotic algorithm big-O
 
 asymptotic(渐近线) analysis | big-X
 these are mathematics notions; In *CS* we only use big-Oh, which is actually big-Θ in mathematics.
 
+another line
+
 * Bachmann–Landau notations
 Family of Bachmann–Landau notations
-o(X) -- The algorithm won't take longer than X \\
-O(X) -- The algorithm won't take longer than X, give or take a constant multiplier
-Θ(X) -- The algorithm will  take as long as  X, give or take a constant multiplier <- best description if possible
-ω(X) -- The algorithm will  take longer than X
-Ω(X) -- The algorithm will  take longer than X, give or take a constant multiplier  i.e. best-case | lower bound
+1) o(X) -- The algorithm won't take longer than X \\
+2) O(X) -- The algorithm won't take longer than X, give or take a constant multiplier
+3) Θ(X) -- The algorithm will  take as long as  X, give or take a constant multiplier <- best description if possible
+4) ω(X) -- The algorithm will  take longer than X
+5) Ω(X) -- The algorithm will  take longer than X, give or take a constant multiplier  i.e. best-case | lower bound
 
 ** Venn's diagram
 Venn's diagram
