@@ -10,8 +10,9 @@ these are mathematics notions; In *CS* we only use big-Oh, which is actually big
 another line
 
 * Bachmann–Landau notations
+
 Family of Bachmann–Landau notations
-1) o(X) -- The algorithm won't take longer than X \\
+1) o(X) -- The algorithm won't take longer than X
 2) O(X) -- The algorithm won't take longer than X, give or take a constant multiplier
 3) Θ(X) -- The algorithm will  take as long as  X, give or take a constant multiplier <- best description if possible
 4) ω(X) -- The algorithm will  take longer than X
@@ -41,6 +42,7 @@ Venn's diagram
 #+END_SRC
 
 * big-theta
+
 Ө(g(x)) is a *set* of functions.
 big-Θ -- tight bound; both upper and lower bound(precise, but diﬃcult to compute)
 Ө(g(x)) = {f(x) such that there exist positive constants c1, c2, N such that 0<=c1*g(x)<=f(x)<=c2*g(x) for all x>N}
