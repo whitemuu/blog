@@ -18,12 +18,23 @@ Family of Bachmann–Landau notations
 4) ω(X) -- The algorithm will  take longer than X
 5) Ω(X) -- The algorithm will  take longer than X, give or take a constant multiplier  i.e. best-case | lower bound
 
+
+| Name         | Notation |    n=10 |         n=100 | example           |
+|--------------+----------+---------+---------------+-------------------|
+| Constant     | 1        |       1 |             1 | x + y             |
+| Logarithmic  | logN     |       3 |             7 | binary search     |
+| Linear       | N        |      10 |           100 | loop              |
+| Linearithmic | NlogN    |      30 |           700 | merge/quick sort  |
+| Quadratic    | N^2      |     100 |         10000 | nested loop       |
+| Cubic        | N^3      |    1000 |       1000000 | triple loop       |
+| Exponential  | 2^n      |    1024 |  1.267650e+30 | check all subsets |
+| Factorial    | n!       | 3628800 | 9.332622e+157 |                   |
 ** Venn's diagram
 Venn's diagram
 #+BEGIN_SRC
 ┌──────────────────────┐
-│   O(g(n))    ┌───────┼──────────────┐        
-│              │       │   Ω(g(n))    │        
+│   O(g(n))    ┌───────┼──────────────┐
+│              │       │   Ω(g(n))    │
 │  ┌─────────┐ │       │              │
 │  │ o(g(n)) │ │Θ(g(n))│ ┌─────────┐  │
 │  └─────────┘ │       │ │ ω(g(n)) │  │
