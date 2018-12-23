@@ -29,7 +29,12 @@ Family of Bachmann–Landau notations
 | Cubic        | N^3      |    1000 |       1000000 | triple loop       |
 | Exponential  | 2^n      |    1024 |  1.267650e+30 | check all subsets |
 | Factorial    | n!       | 3628800 | 9.332622e+157 |                   |
+
+#+BEGIN_QUOTE
+Where there is a will, there is a way.
+#+END_QUOTE
 ** Venn's diagram
+
 Venn's diagram
 #+BEGIN_SRC
 ┌──────────────────────┐
@@ -41,7 +46,9 @@ Venn's diagram
 └──────────────┼───────┘ └─────────┘  │
                └──────────────────────┘
 #+END_SRC
+Map的核心思想就是可以比线性查找更快. 通过散列值(hash)作为键(key)来定位对象的过程分为两步:在Map内部,存储着一个顶层数组,顶层数组的每个元素指向其他的数组,查找或存储的时候,先根据key对象的hashCode()值计算出数组的索引,然后到这个索引找到所指向的第二层线性数组,使用equals方法来比较是否有相应的值(以返回或者存储).
 
+Java
 #+BEGIN_SRC java
   public static void countDown(int start, int delay) {
       ActionListener listener = event -> {
