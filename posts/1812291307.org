@@ -48,17 +48,17 @@
 
 * 域名
 
-从 namecheap.com 购入 nichijou.city (/Nichijou/ 和 /City/ 都是 [[https://twitter.com/himaraya][あらゐけいいち]] 老师作品)
+从 namecheap.com 购入 =nichijou.city= (/Nichijou/ 和 /City/ 都是 [[https://twitter.com/himaraya][あらゐけいいち]] 老师作品)
 
 * URL 设计
 
 直接用文章标题作URL的话带来的问题是将来可能会变，所以用日期做固定ID，我又不喜一串长长的数字，就在前端编码成了36进制 ~i.toString(36).toUpperCase()~ ；
 
-所以 URL 形似： ~nichijou.city/posts/TYVU3V~
+所以 URL 形似： ~nichijou.city~
 
 当然这种冷冰冰的字符对 SEO 极不友好，故而采用 medium.com 的策略， =title + id= ，title 并不影响 routing
 
-最终 URL 形如： ~www.nichijou.city/posts/TYVU3V-robot-from-google-fancy-me~
+最终 URL 形如： ~nichijou.city/posts/TYVU3V-robot-from-google-fancy-me~
 
 * TODO 标签索引
 * 图床
