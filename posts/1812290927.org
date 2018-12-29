@@ -1,4 +1,4 @@
-#+TITLE: 登泰山記
+#+TITLE: [转]登泰山記
 #+AUTHOR: angus zhang
 #+DATE: 2018-12-29T09:27:37CST
 #+TAGS: guwen yaonai
@@ -12,3 +12,7 @@
 [[http://i8.bangqu.com/r2/news/20180320/3049616b6269554b6266.jpg][by 王宁]]
 
 是日，觀道中石刻，自唐顯慶以來，其遠古刻盡漫失。僻不當道者，皆不及往。山多石，少土。石蒼黑色，多平方，少圓。少雜樹，多松，生石罅，皆平頂。冰雪，無瀑水，無鳥獸音跡，至日觀數裏內無樹，而雪與人膝齊。桐城姚鼐記。
+
+* ref
+1. [[https://zh.wikisource.org/zh-hant/%25E7%2599%25BB%25E6%25B3%25B0%25E5%25B1%25B1%25E8%25A8%2598][登泰山記 - 維基文庫，自由的圖書館]]
+2. [[http://www.tonyhuang39.com/page/cc318.html][Tony私選的古文觀止--登泰山記]]
