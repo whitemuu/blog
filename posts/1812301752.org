@@ -1,0 +1,37 @@
+#+TITLE: inept way to set specific global variable for directory
+#+AUTHOR: angus zhang
+#+DATE: 2018-12-30T17:52:03CST
+#+TAGS: emacs elisp minor-mode
+
+平时用 org-mode 里的代码块习惯用默认的 indentation 设置，即 ~(= org-edit-src-content-indentation 2)~。
+发现 mooz 的 parser 并不能识别并去掉这两个空格，所以想实现编辑某一文件夹下的 org 文件时，有单独的设
+置(indentation 为0)，自然想到 directory-local variables，不幸变量 org-edit-src-content-indentation 只有 global 才生效，
+所以用以下 hook 机制实现想要的效果。
+
+Emacs setting:
+#+BEGIN_SRC emacs-lisp
+(define-minor-mode my-org-buffer-local-mode
+  "Minor mode to simulate buffer local keybindings."
+  :init-value nil
+  :keymap (make-keymap))
+(define-key my-org-buffer-local-mode-map (kbd "C-c '") #'(lambda () (interactive)
+                                                           (org-edit-special)
+                                                           (setq-default org-edit-src-content-indentation 0)
+                                                           (my-prog-buffer-local-mode)))
+(define-minor-mode my-prog-buffer-local-mode
+  :init-value nil
+  :keymap (make-keymap))
+(define-key my-prog-buffer-local-mode-map (kbd "C-c '") #'(lambda () (interactive)
+                                                            (org-edit-src-exit)
+                                                            (setq-default org-edit-src-content-indentation 2)))
+#+END_SRC
+
+.dir-locals.el:
+#+BEGIN_SRC emacs-lisp
+((org-mode
+  (eval . (my-org-buffer-local-mode))))
+#+END_SRC
+
+* ref
+1. [[https://stackoverflow.com/questions/27321407/how-to-make-a-buffer-local-key-binding-in-emacs][elisp - How to make a buffer-local key binding in Emacs? - Stack Overflow]]
+2. [[https://nullprogram.com/blog/2013/02/06/][How to Make an Emacs Minor Mode « null program]]
