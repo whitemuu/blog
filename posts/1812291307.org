@@ -1,4 +1,4 @@
-#+TITLE: 本 blog 小传
+#+TITLE: blog redux
 #+AUTHOR: angus zhang
 #+DATE: 2018-12-29T13:07:33CST
 #+TAGS: blog node url domain
@@ -46,6 +46,10 @@
 
 这次改用 node，发现 mooz 巨巨有写过一个 [[https://github.com/mooz/org-js/][parser]] ，就拿来用了。
 
+*** parser issues
+- double =\n\n= denote a <p> even after a heading
+
+* TODO SPA
 * 域名
 
 从 namecheap.com 购入 =nichijou.city= (/Nichijou/ 和 /City/ 都是 [[https://twitter.com/himaraya][あらゐけいいち]] 老师作品)
@@ -65,7 +69,22 @@
 
 网站流量可怜，暂且用 Github，和文章放在一起管理起来方便，文件名不变，将来迁移起来也容易
 
-黏图脚本
-#+BEGIN_SRC applescript
-  -- TODO
+Hammerspoon 黏图脚本
+#+BEGIN_SRC lua
+  function saveImgToStatic()
+    local filename = '/Users/nichijou/Documents/blog/static/' .. os.date('%y%m%d%H%M%S') .. '.png'
+    local img = hs.pasteboard.readImage()
+
+    if img == nil then
+      hs.alert('no image on pasteboard')
+      return
+    end
+
+    local res = img:saveToFile(filename)
+    if not res then
+      hs.alert('failed to save')
+    else
+      hs.pasteboard.setContents('[[' .. filename .. '][]]')
+    end
+  end
 #+END_SRC
