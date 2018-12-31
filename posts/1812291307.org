@@ -14,9 +14,7 @@
 第二个同第一个，只是生成器改成了 ~Hexo~;
 
 第三个和这个博客思路是一致的，只不过后端用的 ~Java~ + ~MySql~ ，太重了，所以这次用的 ~node~ + ~Mongodb~ ，其实咯，感觉凭可预见的这点文章数量，连 ~MongoDB~ 都不必用，直接存在变量中都是OK的。
-
-* 理想的工作流
-** why not ~Jekyll~ or ~Hexo~
+* why not ~Jekyll~ or ~Hexo~
 
 为什么淘汰了用 jekyll 抑或 hexo 生成静态博客呢，其实它们也未尝不方便，写完一篇文章 =build= 一下，再推送到 github 就好了，还省却了域名和主机的开销。
 
@@ -24,9 +22,9 @@
 
 还有我想用 org-mode，Hexo 上面倒是找到过一个 plugin，但已停止维护。
 
-** then what
+* 理想的工作流
 
-写博客，我能想到的最精简最方便的工作流是： =本地编辑 -> 有选择的推送= ，其它的的工作都应交由机器完成
+写博客，我能想到的最精简最方便的工作流是： =本地编辑 ➡ 推送= ，其它的的工作都应交由机器完成
 
 如此，
 1. 本地写文章
@@ -42,7 +40,7 @@
 
 ** org-mode 渲染
 
-不像 markdown 通用，有现成的方案支援，所以需要花些心思，我的第三个博客用的Java，就找不到一个很好的 parser，期间还想过在服务器装 Emacs，然后用Java和命令行交互，控制 Emacs 帮忙渲染从 Github 拉取过来的 org-mode 源文件，不过没弄好，好在 Github 会渲染 org-mode，索性直接拉取的渲染好的版本。
+org-mode 不似 markdown 通用，有多数软件默认支援，所以需要花些心思，我的第三个博客用的 Java，就找不到一个很好的 parser，期间还想过在服务器装 Emacs，然后用Java和命令行交互，控制 Emacs 帮忙渲染从 Github 拉取过来的 org-mode 源文件，不过没弄好，好在 Github 会渲染 org-mode，索性直接拉取的渲染好的版本。
 
 这次改用 node，发现 mooz 巨巨有写过一个 [[https://github.com/mooz/org-js/][parser]] ，就拿来用了。
 
@@ -75,6 +73,11 @@ console.log(id) // 1812291307
 最终 URL 形如： ~nichijou.city/posts/TYVU3V-robot-from-google-fancy-me~
 
 * TODO 标签索引
+
+* 代码高亮
+在 [[http://mooz.github.io/org-js/][org.js]] 看到 js 代码有高亮，还以为 org-js 能分析 js 代码块，结果也是在前端挂的 js 库
+
+排查了半天发现 org-js 输出的 html 会把 ='= 替换成 =&#39;= ， ="= 换成 =&#34;= [see: [[https://www.w3.org/MarkUp/html-spec/html-spec_13.html][The HTML Coded Character Set]]]。所以 prism 才会解析出错。
 * 图床
 
 网站流量可怜，暂且用 Github，和文章放在一起管理起来方便，文件名不变，将来迁移起来也容易
