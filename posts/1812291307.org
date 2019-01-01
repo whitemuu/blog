@@ -75,6 +75,7 @@ console.log(id) // 1812291307
 * TODO 标签索引
 
 * 代码高亮
+
 在 [[http://mooz.github.io/org-js/][org.js]] 看到 js 代码有高亮，还以为 org-js 能分析 js 代码块，结果也是在前端挂的 js 库
 
 排查了半天发现 org-js 输出的 html 会把 ='= 替换成 =&#39;= ， ="= 换成 =&#34;= [see: [[https://www.w3.org/MarkUp/html-spec/html-spec_13.html][The HTML Coded Character Set]]]。所以 prism 才会解析出错。
