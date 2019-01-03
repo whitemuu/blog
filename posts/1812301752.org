@@ -37,4 +37,4 @@ Emacs setting:
 * ref
 1. [[https://stackoverflow.com/questions/27321407/how-to-make-a-buffer-local-key-binding-in-emacs][elisp - How to make a buffer-local key binding in Emacs? - Stack Overflow]]
 2. [[https://nullprogram.com/blog/2013/02/06/][How to Make an Emacs Minor Mode « null program]]
-3. ~/.emacs.d/elpa/org-20161102/org.el(line 21022)
+3. ~/.emacs.d/elpa/org-20161102/org.el::org-edit-special
