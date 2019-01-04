@@ -38,14 +38,17 @@
 2. 版本控制
 3. 坐拥 Github 网页端编辑功能
 
-** org-mode 渲染
+* org-mode 渲染
 
 org-mode 不似 markdown 通用，有多数软件默认支援，所以需要花些心思，我的第三个博客用的 Java，就找不到一个很好的 parser，期间还想过在服务器装 Emacs，然后用Java和命令行交互，控制 Emacs 帮忙渲染从 Github 拉取过来的 org-mode 源文件，不过没弄好，好在 Github 会渲染 org-mode，索性直接拉取的渲染好的版本。
 
 这次改用 node，发现 mooz 巨巨有写过一个 [[https://github.com/mooz/org-js/][parser]] ，就拿来用了。
 
-*** parser issues
-- double =\n\n= denote a <p> even after a heading
+** parser issues
+- =\n\n= denote a <p> even after a heading
+- in ==<code>== / ~~<code>~~ , <code> starting or ending with '/" cannot parse correctly
+- ='= 输出 =&#39;= ， ="= 输出 =&#34;=
+- no footnote support
 
 * TODO SPA
 * 域名
@@ -66,11 +69,11 @@ id = parseInt(id, 36)
 console.log(id) // 1812291307
 #+END_SRC
 
-所以 URL 形似： ~nichijou.city/posts/TYVU3V~
+所以 URL 形似： ~nichijou.city/posts/tyvu3v~
 
 当然这种冷冰冰的字符对 SEO 极不友好，故而借鉴 medium.com 的策略， =title + id= ，title 并不影响 routing
 
-最终 URL 形如： ~nichijou.city/posts/TYVU3V-robot-from-google-fancy-me~
+最终 URL 形如： ~nichijou.city/posts/robot-from-google-fancy-me-tyvu3v~
 
 * TODO 标签索引
 
@@ -89,10 +92,7 @@ function saveImgToStatic()
   local filename = os.date('%y%m%d%H%M%S') .. '.png'
   local img = hs.pasteboard.readImage()
 
-  if img == nil then
-    hs.alert('no image on pasteboard')
-    return
-  end
+  if img == nil then return hs.alert('no image on pasteboard') end
 
   local res = img:saveToFile('/Users/nichijou/Documents/blog/static/' .. filename)
 
