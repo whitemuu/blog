@@ -1,0 +1,91 @@
+#+TITLE: 添加一个返回顶部按钮
+#+AUTHOR: angus zhang
+#+DATE: 2019-01-07T12:12:24CST
+#+TAGS: blog html web website nichijou
+
+如果文章很长，提供一个返回顶部的按钮还是很有必要的，不知 =桌面端= 浏览器为何一直都不提供一个，啐。
+
+逛日常图片时突然意识到里面的乌鸦([[https://www.youtube.com/watch?v=MGt56pYyirw&t=33s][karasu]])倒是挺适合担当这一角色的。
+
+以下是蹩脚的实现。
+
+#+BEGIN_SRC web
+  ...
+  <style>
+   img#top, img#foothold {
+     transition: 0.70s;
+     -webkit-transition: 0.70s;
+     -moz-transition: 0.70s;
+     -ms-transition: 0.70s;
+     -o-transition: 0.70s;
+     width: 60px;
+     position: fixed;
+     right: 40px;
+     bottom: 20px;
+     display: none;
+     animation-duration: 0.8s;
+   }
+   img#top:hover {
+     transition: 0.20s;
+     -webkit-transition: 0.20s;
+     -moz-transition: 0.20s;
+     -ms-transition: 0.20s;
+     -o-transition: 0.20s;
+     -webkit-transform: rotate(64deg);
+     -moz-transform: rotate(64deg);
+     -o-transform: rotate(64deg);
+     -ms-transform: rotate(64deg);
+     transform: rotate(64deg);
+   }
+   @keyframes fly {
+     to {bottom: 100vh}
+   }
+   @keyframes drop {
+     to {bottom: -40px}
+   }
+  </style>
+  <script>
+   const karasu = document.getElementById('top')
+   const karasuFoothold = document.getElementById('foothold')
+
+   // DOMMouseScroll for firefox
+   ;['mousewheel', 'DOMMouseScroll'].forEach( e => {
+     window.addEventListener(e, () => {
+       if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+         karasu.style.display = "block"
+         karasuFoothold.style.display = "block"
+       } else {
+         karasu.style.display = "none"
+         karasuFoothold.style.display = "none"
+       }
+     })
+   })
+
+   function fly() {
+     karasu.style.transform = "rotate(64deg)"
+     window.scrollTo({ top: 0, behavior: 'smooth' })
+     karasuFoothold.style.animationName='drop'
+     setTimeout(() => {
+       karasuFoothold.style.display = "none"
+       karasuFoothold.style.animationName=''
+     }, 400)
+   }
+
+   window.onscroll = () => {
+     if (document.documentElement.scrollTop < 500 && karasu.style.display === "block") {
+       karasu.style.animationName='fly'
+       setTimeout(() => {
+         karasu.style.animationName=''
+         karasu.style.display = "none"
+         karasu.style.transform = ""
+       }, 800)
+     }
+   }
+  </script>
+  <body>
+    ...
+    <img id="foothold" src="/img/karasu-foothold.png"/>
+    <img id="top" onclick="fly()" alt="top" src="/img/karasu.png"/>
+    ...
+  </body>
+#+END_SRC

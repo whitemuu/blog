@@ -1,4 +1,4 @@
-#+TITLE: set global variable locally
+#+TITLE: Emacs: set global variable locally
 #+AUTHOR: angus zhang
 #+DATE: 2018-12-30T17:52:03CST
 #+TAGS: emacs elisp minor-mode
