@@ -1,11 +1,11 @@
-#+TITLE: 添加一个返回顶部按钮
+#+TITLE: 给网页添加返回顶部按钮
 #+AUTHOR: angus zhang
 #+DATE: 2019-01-07T12:12:24CST
 #+TAGS: blog html web website nichijou
 
-如果文章很长，提供一个返回顶部的按钮还是很有必要的，不知 *桌面端* 浏览器为何一直都不提供一个，啐。
+如果文章很长，提供一个返回顶部的按钮还是很有必要的，不知 *桌面端* 浏览器为何一直都不提供，啐。
 
-逛日常图片时突然意识到里面的乌鸦([[https://www.youtube.com/watch?v=MGt56pYyirw&t=33s][karasu]])倒是挺适合担当这一角色的。
+逛 /日常/ 图片时突然意识到里面的乌鸦([[https://www.youtube.com/watch?v=MGt56pYyirw][karasu]])倒是挺适合担当这一角色的。
 
 以下是蹩脚的实现。
 
