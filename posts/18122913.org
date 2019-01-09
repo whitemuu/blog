@@ -1,7 +1,7 @@
 #+TITLE: about this blog
 #+AUTHOR: angus zhang
 #+DATE: 2018-12-29T13:07:33CST
-#+TAGS: blog node url domain ˗ˏˋrecommendˎˊ
+#+TAGS: blog node url domain recommend
 
 * 前传
 
@@ -14,7 +14,7 @@
 第二个同第一个，只是生成器改成了 ~Hexo~;
 
 第三个和这个博客思路是一致的，只不过后端用的 ~Java~ + ~MySql~ ，太重了，所以这次用的 ~node~ + ~Mongodb~ ，其实咯，感觉凭可预见的这点文章数量，连 ~MongoDB~ 都不必用，直接存在变量中都是OK的。
-* why not ~Jekyll~ or ~Hexo~
+* Why not ~Jekyll~ or ~Hexo~
 
 为什么不用 jekyll 抑或 hexo 生成静态博客呢，其实它们也未尝不方便，写完一篇文章 =build= 一下，再推送到 github 就好了，还省却了域名和主机的开销。
 
@@ -47,132 +47,186 @@ org-mode 不似 markdown 通用，有多数软件默认支援，所以需要花�
 这次改用 node，发现 mooz 巨巨有写过一个 [[https://github.com/mooz/org-js/][parser]] ，就拿来用了。
 
 ** parser issues
+
 - =\n\n= denote a <p> even after a heading
 - in ==<code>== / ~~<code>~~ , <code> starting or ending with '/" cannot parse correctly
-- ='= 输出 =&#39;= ， ="= 输出 =&#34;=
 - no footnote support
 - no support for [[https://orgmode.org/manual/Quoting-HTML-tags.html][Quoting HTML tags]]
 
-* TODO SPA
-id anchor
-[window.]history.pushState(null, null, '') <- do nothing
-[window.]history.pushState(null, null, ' ') <- remove hash
-[window.]history.replaceState(null, null, ' '); <- remove hash but no history
-* view counter | 访问统计
-动态博客统计访问量不难，
-但是我想让应用 disposable，所以访问量不想储存在服务器
-一种方案是定期push到github，但强停应用仍会丢失部分数据
+* SPA
+
+单页应用交互体验棒，响应迅速，但实现起来要复杂一些，好在博客本身复杂度不高
+
+这里罗列一下用到的浏览器API
+
+#+BEGIN_SRC js
+// origin
+// nichijou.city/post/hello-world#section-2
+
+history.pushState(null, null, '') // do nothing
+
+history.pushState(null, null, '#section-4') // change hash
+// nichijou.city/post/hello-world#section-4
+
+history.pushState(null, null, ' ') // remove hash
+// nichijou.city/post/hello-world
+
+history.pushState(null, null, 'bye-word') // change last part of path
+// nichijou.city/post/bye-world
+
+history.pushState(null, null, '/notes') // change the whole path
+// nichijou.city/notes
+#+END_SRC
+
+
+=history.replaceState= 方法顾名思义，替换当前，被替换的部分丢弃，所以想不保留历史时用该方法。
+
+** ref
+[[https://medium.com/frontend-fun/js-vanilla-script-spa-1b29b43ea475][Js: Vanilla SPA – Frontend Fun – Medium]]
+[[https://stackoverflow.com/questions/1397329/how-to-remove-the-hash-from-window-location-url-with-javascript-without-page-r][How to remove the hash from window.location (URL) with JavaScript without page refresh? - Stack Overflow]]
+* Domain
+
+从 namecheap.com 购入 =nichijou.city= (/Nichijou/ 和 /City/ 都是 [[https://twitter.com/himaraya][あらゐけいいち]] 老师作品)
+
+* 文章 URL/Permalink 设计
+** ID
+
+大多数 practice 直接用文章标题作 URL ， 带来的问题是将来可能会变，所以需要一个不变的ID。
+
+medium 好像是生成的md5(d87199a18bed)，这种适合有大量数据作区分使用，我没必要使用这种又长又隐晦的ID。
+
+想到两种思路，计数递增 和 创建日期
+*** 计数递增
+
+stackoverflow 应该是用的这种：
+
+=webmasters.stackexchange.com/questions/49781/benefit-of-date-in-url-segments=
+
+优点：
+- 是能做到最短id的方式
+- 自带统计属性
+- 不连续的 ID 能 indicate 删除过的文章，不过诱惑不大，我又不会舍得真删文章，顶多 archive
+- 酷，嗯，短数字ID确实很酷呢，比如 250bpm.com/blog:138，www.soimort.org/mst/9
+
+*** 创建日期
+
+用日期一来可以保证 unique(毕竟只有我一个人在发文，不会出现冲突)，二是将ID(创建日期)用作文件名，在文件内容里就不需再记录该字段了。
+
+我倾向于这种
+
+** 日期
+
+既然决定用创建日期作ID，在 url 显示日期也就顺理成章。不过真的适合么？
+
+一般时效性强的文章，比如新闻网站都会在 URL 放日期，对读者也很有参考价值。
+
+不过我的文章打算更新，又不是时效性很强的内容，况且日期又可以放在页面内，所以我决定不在 URL 里强调创建日期。
+
+*** 日期 ID 压缩
+
+要把日期作为ID放在 URL，又不想在 URL 展示日期，只能 encode 一下了，况且我本来就嫌它长，早就想压它一压。
+
+思路是：
+
+YY/mm/dd/HH
+
+表示成 YY/DDD/HH，可以省略一位
+
+表示成 YY/HHHH(hour of year)，则又可以省略一位，剩六位
+
+再转成 36 进制(999999.toString(36) = lflr)，最多只有四位，基本满意
+
+题外话，javascript的日期 API 真是可怜。
+
+#+BEGIN_SRC js
+let date = '18123017' // 2018-12-30T17:00:00
+date = encodeDate(date)
+console.log(date) // 41N5
+date = decodeDate(date)
+console.log(date) // 18123017
+
+function slappingZero(num, length) {
+  return '0'.repeat(length - num.toString().length) + num
+}
+
+function encodeDate(str) {
+  const [year, month, day, hour] = str.match(/\d{2}/g)
+  const date = new Date('20' + year, month - 1, day, hour)
+  let startOfDate = new Date(date.getFullYear(), 0, 0)
+  let dayOfYear = Math.floor((date - startOfDate)/ (1000 * 60 * 60 * 24))
+  return parseInt(year + slappingZero((dayOfYear * 24 + date.getHours()).toString(), 4)).toString(36).toUpperCase()
+}
+
+function decodeDate(str) {
+  let date = parseInt(str, 36).toString()
+  let [, year, hours] = date.match(/(\d{2})(\d{4})/)
+  let days = Math.floor(hours / 24)
+  date = new Date((days * 24 * 60 * 60 * 1000) + (new Date('20' + year, 0, 0) - 0))
+  return year+ slappingZero(date.getMonth() + 1, 2) + slappingZero(date.getDate(), 2) + slappingZero((hours % 24), 2)
+}
+#+END_SRC
+** 位置
+
+当然这种冷冰冰的字符对 SEO 不友好，采用 =title + id= 的组合，title 不影响 routing
+
 #+BEGIN_EXAMPLE
-                 lost data
-                   ┌─┴─┐
-─────┬──────┬──────┬───x<- break
-    push   push   push
+nichijou.city/post/set-global-variable-locally-41N5 ✗ 乱作一团
+nichijou.city/post/41N5-set-global-variable-locally ✗ 乱作一团
+nichijou.city/post/set-global-variable-locally/41N5 ✗ 重要的ID放最后，不妥
+nichijou.city/post/41N5:set-global-variable-locally ✗ cute 但是有些乱作一团
+nichijou.city/post/41N5/set-global-variable-locally ✓ not bad
 #+END_EXAMPLE
-既然使用使用google analysis，不如直接用它作view counter
+
+最终形式：nichijou.city/post/41N5[.*]
+
+谷歌搜索结果可以省略ID部分，不知如何实现。
+
+[[../static/190106233349.png][omission of id in Google Search]]
+
+** ref
+
+1. ! [[https://indieweb.org/URL_design][URL design - IndieWeb]]
+2. [[https://searchengineland.com/four-reasons-to-avoid-using-dates-in-urls-13152][Four Reasons To Avoid Using Dates In URLs - Search Engine Land]]
+3. [[http://www.seobook.com/do-you-put-dates-your-urls][Do You Put Dates in Your URLs? | SEO Book]]
+4. [[https://moz.com/community/q/date-in-the-url][Date in the URL | Moz Q&A | Moz]]
+5. [[https://moz.com/community/q/blog-article-url-with-or-without-date][Blog article URL - with or without date? | Moz Q&A | Moz]]
+6. [[https://www.searchenginenews.com/sample/content/should-i-remove-the-dates-in-my-blog-urls-yes][Should I Remove the Dates in my Blog URLs? Yes! · SearchEngineNews.com]]
+* TODO view counter | 访问统计
+
+动态博客想统计访问量不难，
+但是我想让应用 disposable，所以访问量不想储存在服务器。
+一种方案是定期push到github，但强停应用仍会丢失部分数据。
+#+BEGIN_EXAMPLE
+    push   push   push
+     ↑      ↑      ↑ 
+─────┴──────┴──────┴───x <- crash
+                   └─┬─┘
+                 lost data
+#+END_EXAMPLE
+
+既然要使用google analysis，不如直接用它作view counter
+
 不过：
 #+BEGIN_QUOTE
 Google doesn't process data instantly, you'd need to subscribe to the realtime analytics and cache
 the data to display live on your site. -- [[https://www.quora.com/Can-I-use-Google-Analytics-as-a-public-page-view-counter][Can I use Google Analytics as a public page view
 counter? - Quora]]
 #+END_QUOTE
+
+数据会有一定的滞后性，但不觉得这是个问题。
 #+BEGIN_EXAMPLE
-─────┬──────┬──────┬─── Google Analysis
-     ↓pull  ↓pull  ↓pull  
-     •      •      •    My Server
+─────┬──────┬──────┬───  :Google Analysis
+     ↓pull  ↓pull  ↓pull   
+     •      •      •     :My Server
      └──┐   └────┐
-       reqest   request
+       request  request  :Users
      └┬─┘   └┬───┘
      delay  delay
 #+END_EXAMPLE
-* 域名
-
-从 namecheap.com 购入 =nichijou.city= (/Nichijou/ 和 /City/ 都是 [[https://twitter.com/himaraya][あらゐけいいち]] 老师作品)
-
-* URL/Permalink 设计
-** TL;DR
-
-采用类似 stackoverflow 的 url 设计
-
-#+BEGIN_EXAMPLE
-<domain>/<folder>/<id>[/<title>]
-eg: nichijou.city/post/asfq9/blog-redux
-#+END_EXAMPLE
-
-title不参与route，以便将来更改
-
-id由创建日期转换而来(转成36进制以缩减长度)
-
-** ID
-
-大多数 practice 直接用文章标题作 URL ， 带来的问题是将来可能会变，所以需要一个不变的ID
-用日期做固定ID
-
-medium 某种十六进制编码 d87199a18bed
-
-id采用创建日期
-
-所以 URL 形似： ~nichijou.city/posts/tyvu3v~
-
-当然这种冷冰冰的字符对 SEO 极不友好，故而借鉴 medium.com 的策略， =title + id= ，title 并不影响 routing
-
-最终 URL 形如： ~nichijou.city/posts/robot-from-google-fancy-me-tyvu3v~
-
-stackexchange
-=webmasters.stackexchange.com/questions/49781/benefit-of-date-in-url-segments=
-id + title, title 不参与route
-
-*** 计数递增
-stackoverflow 貌似是渐增的，长度不固定
-
-优点有
-- 是能做到最短id的方式
-- 不连续的 ID 能 indicate 删除过的文章，不过诱惑不大，我又不会舍得真删文章，顶多 archive
-- 酷，嗯，短数字ID确实很酷呢，比如 250bpm.com/blog:138，www.soimort.org/mst/9
-
-
-位置
-✗ nichijou.city/post/set-global-variable-locally-asfq9 混乱
-✗ nichijou.city/post/asfq9-set-global-variable-locally 混乱
-✓ nichijou.city/post/asfq9/set-global-variable-locally
-✓ nichijou.city/post/set-global-variable-locally/asfq9
-
-访问链接 
-nichijou.city/post/asfq9[.*]
-
-[[../static/190106233349.png][omission of id in Google Search]]
-
-*** 创建日期
-
-用日期一来可以保证 unique(毕竟只有我一个人在发文，不会出现冲突)，二是创建日期保存在文件名，在内容里就不需再记录该字段了
-
-精确度 小时 一小时内连发大于一篇文章的概率比较小
-
-*** 日期 ID 压缩
-
-** date
-文章时效性
-结论：文章既然打算常更新，就不应在url里强调创建日期
-
-#+BEGIN_SRC js
-// encode
-let id = 1812291307
-id = id.toString(36).toUpperCase()
-console.log(id) // TYZOX7
-
-// decode
-id = parseInt(id, 36)
-console.log(id) // 1812291307
-#+END_SRC
-
-** ref
-- ! [[https://indieweb.org/URL_design][URL design - IndieWeb]]
-- [[https://searchengineland.com/four-reasons-to-avoid-using-dates-in-urls-13152][Four Reasons To Avoid Using Dates In URLs - Search Engine Land]]
--   [[http://www.seobook.com/do-you-put-dates-your-urls][Do You Put Dates in Your URLs? | SEO Book]]
-- [[https://moz.com/community/q/date-in-the-url][Date in the URL | Moz Q&A | Moz]]
-- [[https://moz.com/community/q/blog-article-url-with-or-without-date][Blog article URL - with or without date? | Moz Q&A | Moz]]
-- [[https://www.searchenginenews.com/sample/content/should-i-remove-the-dates-in-my-blog-urls-yes][Should I Remove the Dates in my Blog URLs? Yes! · SearchEngineNews.com]]
 * TODO 标签索引
+* TODO 评论系统
 
+暂时打算用 [[https://gitalk.github.io/][Gitalk Demo | Aotu.io「凹凸实验室」]]
 * 代码高亮
 
 在 [[http://mooz.github.io/org-js/][org.js]] 看到 js 代码有高亮，还以为 org-js 能分析 js 代码块，结果也是在前端挂的 js 库

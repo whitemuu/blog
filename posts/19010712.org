@@ -89,3 +89,11 @@
     ...
   </body>
 #+END_SRC
+
+* ref
+
+- ! [[https://www.the-art-of-web.com/css/css-animation/][Animation Using CSS Transforms < CSS | The Art of Web]]
+- [[https://www.w3schools.com/css/css3_animations.asp][CSS Animations]]
+- [[https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_scroll_to_top][Tryit Editor v3.6]]
+- [[https://codepen.io/ImageHoverEffects/pen/GfJLg][Rotate when hover css animation]]
+- [[https://stackoverflow.com/questions/23695090/spin-or-rotate-an-image-on-hover][css - Spin or rotate an image on hover - Stack Overflow]]
