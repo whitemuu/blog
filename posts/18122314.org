@@ -1,0 +1,124 @@
+#+TITLE: IEEE-754 in a nutshell
+#+AUTHOR: angus zhang
+#+DATE: 2018-12-23T14:14:27CST
+#+TAGS: datatype CE IEEE in-a-nutshell
+
+* 十进制 -> 二进制
+
+我们熟悉十进制，而计算机只能储存二进制，所以必然存在互转的步骤。
+
+小数转二进制是依靠 =小数部分= 不断乘以2，保存每次的个位，直到小数部分刚好等于0，不过多数情况是永远也不能等于0的，啧啧。
+
+比如0.125
+#+BEGIN_EXAMPLE
+      0.125  integer part
+x2    0.25       0
+x2    0.5        0
+x2    1          1
+
+0.125 = 0b0.001 (这里我们用0b表示binary)
+#+END_EXAMPLE
+
+既存在整数部分又存在小数部分的我们需要分别操作，最后将结果相加。
+
+如10.16
+#+BEGIN_EXAMPLE
+integer part:
+      10
+/2     5     0
+/2     2     1
+/2     1     0
+             1
+
+fractional part:
+      0.16
+x2    0.32    0
+x2    0.64    0
+x2    1.28    1
+x2    0.56    0
+x2    1.12    1
+x2    0.24    0
+x2    0.48    0
+x2    0.96    0
+x2    1.92    1
+x2    1.84    1
+x2    1.68    1
+x2    1.36    1
+x2    1.72    0
+...
+
+10.16 = 0b1010.0010100011110...
+#+END_EXAMPLE
+* 浮点数的表示
+
+计算机用以下方式储存以上转化后的二进制数
+
+先移动小数点将二进制数用类似科学技术法的方式表示(之所以称作浮点数就在于此)
+#+BEGIN_EXAMPLE
+   + 1010.00101000..
+=> + 1.01000101000.. x 2^3
+   ↑   └─────┬─────┘     ↑
+  sign    mantissa    exponent
+#+END_EXAMPLE
+
+可见有三个有变数的部分需要储存：正负(sign)、尾数(mantissa)以及指数(exponent)。
+
+具体按如下方式分配空间。
+|        | Sign | Exp | Mantissa | Total |
+|--------+------+-----+----------+-------|
+| float  |    1 |   8 |       23 | 32bit |
+| double |    1 |  11 |       52 | 64bit |
+** sign
+
+0表示正，1表示负。
+** exponent | 指数
+
+float 采用 excess-127 表示符号数([[https://en.wikipedia.org/wiki/Offset_binary][Offset binary - Wikipedia]])
+
+(?)即用 0~255 对应表示 -127~128
+** mantissa | 尾数
+
+多丢，少补 0，占满 23 或 52 个 bits
+** 验证
+#+BEGIN_SRC java
+// 打印 10.16f 的内存表示
+System.out.println(String.format("%32s", Integer.toBinaryString(Float.floatToIntBits(10.16f))).replace(' ', '0'));
+//=> 01000001001000101000111101011100
+#+END_SRC
+
+0-10000010-01000101000111101011100
+
+符号位为0，对应正数
+
+指数部分 0b10000010 = 130，对应3
+
+合起来 + 1.01000101000111101011100 x 2^3，正好约等于10.16
+* 不足之症
+
+IEEE 754 是在表示范围和精度权衡之下的结果。
+
+想必阁下一定遇到过以下类似问题
+#+BEGIN_SRC java
+System.out.println(0.3f * 3); //0.90000004
+#+END_SRC
+
+浮点数一个主要问题就是不精确，道理很简单，定长内存存在的表示是有限的，而实际比如0.1到0.2之间的小数就有无限个。所以势必造成精度损失。
+
+事实上鉴于 float 的精度之差，你应该舍弃 float 而默认使用 double float(除非特别需要优化的情况: 有大量的小数需要计算且精度要求不高)，
+这也是为什了 C/java 等语言选择把未作特殊标记的小数 literal 默认成 double float 的原因：
+#+BEGIN_EXAMPLE
+0.1  <- double float
+0.1f <- float
+#+END_EXAMPLE
+** 疗法
+
+1. 在数据输入/输出阶段进行拦截，转化成整数进行计算和保存
+2. 专用类库API比如 Java/BigDecimal
+* ref
+- [[https://en.wikipedia.org/wiki/Signed_number_representations][Signed number representations - Wikipedia]]
+- [[https://en.wikipedia.org/wiki/Floating-point_arithmetic][Floating-point arithmetic - Wikipedia]]
+- [[https://en.wikipedia.org/wiki/IEEE_754][IEEE 754 - Wikipedia]]
+- [[https://en.wikipedia.org/wiki/Offset_binary][Offset binary - Wikipedia]]
+- 矢泽久雄 /程序是怎样跑起来的/
+- Java the complete reference
+- [[https://www.ibm.com/developerworks/library/j-math2/index.html][Java's new math, Part 2: Floating-point numbers]]

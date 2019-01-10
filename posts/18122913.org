@@ -5,7 +5,7 @@
 
 * 前传
 
-说起来这是鄙人的第四个博客了.
+说起来这是鄙人的第四个博客了。
 
 前三个都是跑起来之后就没有然后了。。
 
@@ -55,9 +55,9 @@ org-mode 不似 markdown 通用，有多数软件默认支援，所以需要花�
 
 * SPA
 
-单页应用交互体验棒，响应迅速，但实现起来要复杂一些，好在博客本身复杂度不高
+单页应用交互体验棒，响应迅速，但实现起来要复杂一些，好在博客本身复杂度不高。
 
-这里罗列一下用到的浏览器API
+这里罗列一下用到的浏览器API。
 
 #+BEGIN_SRC js
 // origin
@@ -79,11 +79,11 @@ history.pushState(null, null, '/notes') // change the whole path
 #+END_SRC
 
 
-=history.replaceState= 方法顾名思义，替换当前，被替换的部分丢弃，所以想不保留历史时用该方法。
+=history.replaceState= 方法顾名思义，替换当前，被替换的部分丢失，所以想不保留历史时用该方法。
 
 ** ref
-[[https://medium.com/frontend-fun/js-vanilla-script-spa-1b29b43ea475][Js: Vanilla SPA – Frontend Fun – Medium]]
-[[https://stackoverflow.com/questions/1397329/how-to-remove-the-hash-from-window-location-url-with-javascript-without-page-r][How to remove the hash from window.location (URL) with JavaScript without page refresh? - Stack Overflow]]
+1. [[https://medium.com/frontend-fun/js-vanilla-script-spa-1b29b43ea475][Js: Vanilla SPA – Frontend Fun – Medium]]
+2. [[https://stackoverflow.com/questions/1397329/how-to-remove-the-hash-from-window-location-url-with-javascript-without-page-r][How to remove the hash from window.location (URL) with JavaScript without page refresh? - Stack Overflow]]
 * Domain
 
 从 namecheap.com 购入 =nichijou.city= (/Nichijou/ 和 /City/ 都是 [[https://twitter.com/himaraya][あらゐけいいち]] 老师作品)
@@ -116,7 +116,7 @@ stackoverflow 应该是用的这种：
 
 ** 日期
 
-既然决定用创建日期作ID，在 url 显示日期也就顺理成章。不过真的适合么？
+既然决定用创建日期作ID，在 URL 显示日期也就顺理成章。不过真的适合么？
 
 一般时效性强的文章，比如新闻网站都会在 URL 放日期，对读者也很有参考价值。
 
@@ -145,7 +145,7 @@ console.log(date) // 41N5
 date = decodeDate(date)
 console.log(date) // 18123017
 
-function slappingZero(num, length) {
+function slapZero(num, length) {
   return '0'.repeat(length - num.toString().length) + num
 }
 
@@ -154,7 +154,7 @@ function encodeDate(str) {
   const date = new Date('20' + year, month - 1, day, hour)
   let startOfDate = new Date(date.getFullYear(), 0, 0)
   let dayOfYear = Math.floor((date - startOfDate)/ (1000 * 60 * 60 * 24))
-  return parseInt(year + slappingZero((dayOfYear * 24 + date.getHours()).toString(), 4)).toString(36).toUpperCase()
+  return parseInt(year + slapZero((dayOfYear * 24 + date.getHours()).toString(), 4)).toString(36).toUpperCase()
 }
 
 function decodeDate(str) {
@@ -162,12 +162,12 @@ function decodeDate(str) {
   let [, year, hours] = date.match(/(\d{2})(\d{4})/)
   let days = Math.floor(hours / 24)
   date = new Date((days * 24 * 60 * 60 * 1000) + (new Date('20' + year, 0, 0) - 0))
-  return year+ slappingZero(date.getMonth() + 1, 2) + slappingZero(date.getDate(), 2) + slappingZero((hours % 24), 2)
+  return year+ slapZero(date.getMonth() + 1, 2) + slapZero(date.getDate(), 2) + slapZero((hours % 24), 2)
 }
 #+END_SRC
 ** 位置
 
-当然这种冷冰冰的字符对 SEO 不友好，采用 =title + id= 的组合，title 不影响 routing
+当然这种冷冰冰的字符对 SEO 不友好，所以采用 =title + id= 的组合，title 不影响 routing
 
 #+BEGIN_EXAMPLE
 nichijou.city/post/set-global-variable-locally-41N5 ✗ 乱作一团
@@ -177,9 +177,9 @@ nichijou.city/post/41N5:set-global-variable-locally ✗ cute 但是有些乱作�
 nichijou.city/post/41N5/set-global-variable-locally ✓ not bad
 #+END_EXAMPLE
 
-最终形式：nichijou.city/post/41N5[.*]
+最终形式： =nichijou.city/post/41N5[/.*]=
 
-谷歌搜索结果可以省略ID部分，不知如何实现。
+而且谷歌搜索结果可以省略ID部分，尚不知如何实现。
 
 [[../static/190106233349.png][omission of id in Google Search]]
 
@@ -231,7 +231,27 @@ counter? - Quora]]
 
 在 [[http://mooz.github.io/org-js/][org.js]] 看到 js 代码有高亮，还以为 org-js 能分析 js 代码块，结果也是在前端挂的 js 库
 
-排查了半天发现 org-js 输出的 html 会把 ='= 替换成 =&#39;= ， ="= 换成 =&#34;= [see: [[https://www.w3.org/MarkUp/html-spec/html-spec_13.html][The HTML Coded Character Set]]]。所以 prism 才会解析出错。
+貌似最通用的两个库是 highlight.js 和 Prism.js，后者貌似多了插件支持，选用的后者。
+
+为了速度，我把Prism挂在后端，发现不能识别  =&#39;=  =&#34;= 等[see: [[https://www.w3.org/MarkUp/html-spec/html-spec_13.html][The HTML Coded Character Set]]]。所以加了几个 replace 操作
+
+#+BEGIN_SRC js
+html.replace(/<code class="language-(.+)">([\s\S]*?)<\/code>/g, (match, lang, code) => {
+    try {
+      code = code
+        .replace(/&#34;/g, '"')
+        .replace(/&#38;/g, "&")
+        .replace(/&#39;/g, "'")
+        .replace(/&#60;/g, "<")
+        .replace(/&#62;/g, ">")
+
+      return `<code class="language-${lang}">${Prism.highlight(code, Prism.languages[lang], lang)}<\/code>`
+    } catch(e) {
+      console.log('未添加对 ' + lang + " 支持")
+    }
+    return match
+  })
+#+END_SRC
 * 图床
 
 网站流量可怜，暂且用 Github，和文章放在一起管理起来方便，文件名不变，将来迁移起来也容易
