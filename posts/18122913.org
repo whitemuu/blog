@@ -99,8 +99,9 @@ medium 好像是生成的md5(d87199a18bed)，这种适合有大量数据作区�
 *** 计数递增
 
 stackoverflow 应该是用的这种：
-
-=webmasters.stackexchange.com/questions/49781/benefit-of-date-in-url-segments=
+#+BEGIN_EXAMPLE
+webmasters.stackexchange.com/questions/49781/benefit-of-date-in-url-segments
+#+END_EXAMPLE
 
 优点：
 - 是能做到最短id的方式

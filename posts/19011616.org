@@ -1,0 +1,327 @@
+#+TITLE: Java: Generic Programming
+#+AUTHOR: angus zhang
+#+DATE: 2019-01-16T16:49:35CST
+#+TAGS: 
+
+范型加入于java SE5.0(JSR 14)，虽然多拿来与 C++ template 作比较，实际上受函数式语言(ML/haskell)的 parametric polymorphism 启发。
+
+范型的加入拓展了编译期(javac)的类型检查的范围(type parameters)，省略了不必要的类型cast，使得代码更加精简。
+
+使用范型很简单，定义范型则需考虑颇多，并不是一个简单的话题，毕竟范型这个 proposal 讨论了五年才加入。本文仅作入门读物。
+
+* 定义一个 Generic Class
+#+BEGIN_SRC java
+public class Foo<T> {
+
+    T value;
+
+    public Foo() {
+        value = null;
+    }
+
+    public Foo(T value) {
+        this.value = value;
+    }
+
+    public T getValue() { return value; }
+
+    public void setValue(T newValue) { value = newValue; }
+}
+#+END_SRC
+
+** type parameter 命名规范
+
+范型声明的参数一般用大写字母表示，并遵循以下命名实践：
+- E :: Element (used extensively by the Java Collections Framework)
+- K :: Key
+- V :: Value
+- N :: Number
+- T :: Type
+  - S,U,V etc. :: 2nd, 3rd, 4th Types
+
+** 静态方法
+
+因为 Generic Class 需要实例化时才能确定类型，所以静态方法不能使用 Generic Class 上定义的 type
+parameter，若想使静态方法范型化，需使用 [[file:/Users/nichijou/Documents/.blog/posts/19011616.org::*Generic Method][Generic Method]]，当然 Generic method 的使用不局限于静态方法，
+当你不需要在类内复用或者统一范型时，即应使用 Generic Method。
+* Generic Class 的使用
+
+使用 Generic Class 类似函数调用，将形参 T 替换为需要的实参如String
+#+BEGIN_SRC java
+... Foo<String> ...
+#+END_SRC
+
+底层实现机制对用户是透明的，语义上你可以认为已经定义了一个新的 Class ~Foo<String>~
+#+BEGIN_SRC java
+public class Foo<String> {
+
+    String value;
+
+    public Foo() {
+        value = null;
+    }
+
+    public Foo(String value) {
+        this.value = value;
+    }
+
+    public String getValue() { return value; }
+
+    public void setValue(String newValue) { value = newValue; }
+}
+#+END_SRC
+
+因此，你可以把 Generic Class 看作一个产生普通类的工厂。
+
+** diamond operator and type inference
+
+如下代码，右面是可以根据左面推导的，两次传入'实参' String 实属多余。
+#+BEGIN_SRC java
+Foo<String> foo = new Foo<String>();
+#+END_SRC
+
+[[https://openjdk.java.net/projects/coin/][Project Coin]] 引入了 diamond operator，即省略可推导的部分。
+#+BEGIN_SRC java
+Foo<String> foo = new Foo<>();
+#+END_SRC
+
+那么为什么不干脆直接省略呢，因为会产生歧义(我们将看到不会产生歧义的 Generic Method 就是直接省略的)，即和 [[file:/Users/nichijou/Documents/.blog/posts/19011616.org::*Raw Types for Backward Compatibility][Raw Types]] 混淆。
+
+** Wildcards type argument
+
+The wildcard can be used in a variety of situations: as the type of a parameter, field, or local variable; sometimes as a return type (though it is better programming practice to be more specific). The wildcard is never used as a type argument for a generic method invocation, a generic class instance creation, or a supertype.
+
+You can specify an upper bound for a wildcard, or you can specify a lower bound, but you cannot specify both.
+
+*** Upper Bounded Wildcards
+
+#+BEGIN_SRC java
+Foo<? extends String> foo = new Foo<>("aa");
+String s = foo.getValue(); // OK, since it's definitly subtype of String
+foo.setValue("bb"); // Error, incompatible types
+#+END_SRC
+
+*** Lower Bounded Wildcards
+
+#+BEGIN_SRC java
+Foo<? super String> foo = new Foo<>("aa");
+foo.setValue("bb"); // OK, since it require something inferior to <? super String>, which is superior to String.
+String s = foo.getValue(); // Error, incompatible type
+Object o = foo.getValue(); // OK
+#+END_SRC
+
+*** Unbounded Wildcards vs. raw type
+
+#+BEGIN_SRC java
+Foo<?> foo1 = new Foo<>("aa");
+Object o1 = foo1.getValue();
+foo1.setValue("bb"); //Error
+
+// raw type
+Foo foo2 = new Foo("aa");
+Object o2 = foo2.getValue();
+foo4.setValue(new Object()); // OK
+#+END_SRC
+
+*** TODO Wildcard Capture and Helper Methods
+
+[[https://docs.oracle.com/javase/tutorial/java/generics/capture.html][Wildcard Capture and Helper Methods (The Java™ Tutorials > Learning the Java Language > Generics (Updated))]]
+** Inheritance of Generic Class
+
+#+BEGIN_EXAMPLE
+Collection<String> <- List<String> <- ArrayList<String>
+#+END_EXAMPLE
+
+*** is Foo<integer> subtype of Foo<Number> ?
+
+if so，generics is polluted，as follows
+#+BEGIN_SRC java
+ArrayList<Integer> integers = new ArrayList<>();
+ArrayList<Number> numbers  = integers; //error OFC. if not, disaster follows
+numbers.add(Long.valueOf(1L)); // disaster
+numbers.add(Integer.valueOf(1));
+#+END_SRC
+
+*** then why is Foo<Integer> inherits Foo<?> OK?
+
+因为 ~? extends Number~ 的类型不确定，所以拒绝任何实参传入。
+#+BEGIN_SRC java
+ArrayList<Integer> integers = new ArrayList<>();
+ArrayList<? extends Number> numbers  = integers; //OK
+numbers.add(Long.valueOf(1L)); // error, incompatiable types, disaster prevented
+numbers.add(Integer.valueOf(1)); // error either
+#+END_SRC
+* TODO Raw Types for Backward Compatibility
+
+出于向后兼容，java允许完全忽略 type parameter 的存在，
+#+BEGIN_SRC java
+Foo foo = new Foo()
+#+END_SRC
+
+程序员确认安全后可使用 ~@SuppressWarnings("unchecked")~ 来阻止 Warning
+* Bounded Type Parameters
+
+把 type parameter 比做函数形参，目前来看有个明显区别，作为静态语言，函数形参是有类型限制的，除了限制传入实参的类型之外，我们可以自由按类型使用形参(作为匹配的参数传入其他方法或者调用其方法，动态语言当然无类型限制，自由使用，需要程序员多留意潜在违规操作)，其实 type parameter 也可以 使用 extends 关键字来指定类型，那么也就可以自由按照所 extends 的类型来使用 type parameter。(当然不指定 bound 的话只能按照Object来操作)
+
+比如如下 Generic Method 如果没指定 ~extends Comparable~ 的话，是不能掉用 ~compareTo~ 方法的。
+#+BEGIN_SRC java
+public static <T extends Comparable> T min(T[] a) {
+    if (a == null || a.length == 0) return null;
+    T smallest = a[0];
+    for (int i = 1; i < a.length; i++) if (smallest.compareTo(a[i]) > 0) smallest = a[i];
+    return smallest;
+}
+#+END_SRC
+
+** Multiple Bounds
+
+#+BEGIN_SRC java
+<T extends B1 & B2 & B3>
+#+END_SRC
+
+If one of the bounds is a class, it must be specified first.
+
+The raw type replaces type variables with the first bound. you should therefore put tagging
+interfaces (that is, interfaces without methods) at the end of the bounds list.
+
+** 为什么没有像 wildcard 那样的 lower bound(super)
+
+指定 upper bound，由于继承特性，可以使用 upper bound 的方法，如果指定 lower bound，什么也干不了。
+
+范型擦除会把 type parameter 替换为第一个 bounding type。
+
+** 为什么设计时选用了 extends 而不是 implements 关键字
+
+class 和 interface 都可用作 bound，但 extends 更能传达 subtype 的意思。
+* Type Erasure
+
+Java 出于字节码向后兼容性原因，采用 Type Erasure 实现范型。完全是在编译期实现，不需运行期开销。
+
+类型擦除包含以下行为：
+- 替换所有的 type parameters 为其第一个 bound 或者 Object
+- 在需要的地方插入类型 cast
+- 生成 bridge method
+
+因java范型只存在于编码期，以下反射代码不受泛型限制。
+#+BEGIN_SRC java
+  ArrayList<Integer> list = new ArrayList<>();
+  list.add(111);
+  list.add(222);
+
+  Class clazz =  Class.forName("java.util.ArrayList");
+  Method m = clazz.getMethod("add", Object.class);
+  m.invoke(list, "ABC");
+
+  System.out.println(list);
+#+END_SRC
+
+** 类型擦除的多态困境与 Bridge Methods
+
+比如我们本意 override Generic Class 的方法 setValue，
+#+BEGIN_SRC java
+class SubFoo extends Foo<String> {
+
+    public SubFoo(String value ) {
+        super(value);
+    }
+
+    public void setValue(String value) { this.value = "<SubFoo::setValue>" + value;}
+}
+#+END_SRC
+
+我们尝试调用该方法，
+#+BEGIN_SRC java
+SubFoo sub = new SubFoo("aa");
+Foo<String> foo = sub;
+foo.setValue("bb");
+System.out.println(foo.getValue()); //<SubFoo::setValue>bb
+#+END_SRC
+
+多态正确工作，但是了解了范型擦除你应该有个疑问，我们看擦除后的Foo是什么样子。
+#+BEGIN_SRC java
+public class Foo {
+    ...
+    public void setValue(Object newValue) {
+        value = newValue;
+    }
+    ...
+}
+#+END_SRC
+
+我们知道 override 需要方法签名(方法名 + 参数)一致，而所以 ~SubFoo::setValue(String)~ 并没有 override ~Foo::setValue(Object)~ ，所以
+#+BEGIN_SRC java
+foo.setValue("bb");
+#+END_SRC
+
+实际调用的是继承而来的 ~SubFoo::setValue(Object)~ ，那为何看结果 ~SubFoo::setValue(String)~ 被正确调用了呢，我们在看编译后的 SubFoo
+#+BEGIN_SRC java
+class SubFoo extends Foo {
+
+    public void setValue(String value) {
+        this.value = (new StringBuilder()).append("<SubFoo::setValue>").append(value).toString();
+    }
+
+    public volatile void setValue(Object obj) {
+        setValue((String)obj); //!!!!!!!!!!
+    }
+}
+#+END_SRC
+
+看强调部分，原来 javac 已经帮忙 override ~Foo::setValue(Object)~ 并正确 delegate 到 ~SubFoo::setValue(String)~ 。这即所谓的的 bridge method。
+
+语义上我们可以把 ~Foo<String>~ 看作一个新生成的类，依赖于这种底层的周到服务。
+
+[[https://docs.oracle.com/javase/tutorial/java/generics/bridgeMethods.html#bridgeMethods][Effects of Type Erasure and Bridge Methods]]
+** Method Overloading
+
+因类型擦除，不可指望依靠 type parameter 不同作方法 overloading
+#+BEGIN_SRC java
+class Demo<T, S> {
+    void doSth(T t) {}
+    // Confliction
+    void doSth(S s) {}
+}
+#+END_SRC
+* Generic Method
+
+也可以只在某个方法上面使用范型，参数声明在返回参数前。
+#+BEGIN_SRC java
+class ArrayAlg {
+    public static <T> T getMiddle(T...a) {
+        return a[a.length / 2];
+    }
+}
+#+END_SRC
+
+使用:
+#+BEGIN_SRC java
+String middle = ArrayAlg.<String>getMiddle("John", "Q.", "Public");
+#+END_SRC
+
+因为以上范型类型可以从传入参数推断出来，所以可以省略范型实参即 ~<String>~
+#+BEGIN_SRC java
+String middle = ArrayAlg.getMiddle("John", "Q.", "Public");
+#+END_SRC
+
+当然范型推断也有翻车的时候
+#+BEGIN_SRC java
+double middle = ArrayAlg.getMiddle(3.14, 1729, 0);
+#+END_SRC
+因传入的参数类型不同，javac会试图找到它们共同的 supertype，即 Number & Comparable<...>，对应的返回值不能用 double 接收。
+
+** generic constructor and generic class
+
+class 上和 constructor 上分别定义 Type parameter 时，new 的时候都要提供类型哦。可能这也是为什么 Generic Class 和 Generic Method 使用时提供类型要求的位置不一样的原因吧。
+#+BEGIN_SRC java
+class MyClass<X> {
+    <T> MyClass(T t) {}
+}
+
+// usage
+new [<String>]MyClass<Integer>(""); // <string> could be inferenced and thus omitted
+#+END_SRC
+* ref
+
+- [[https://docs.oracle.com/javase/tutorial/java/generics/index.html][Lesson: Generics (Updated) (The Java™ Tutorials > Learning the Java Language)]]
+- /core java 10th/
+- [[https://www.zhihu.com/question/28665443/answer/118148143][Java不能实现真正泛型的原因？ - 知乎]]
