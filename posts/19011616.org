@@ -1,7 +1,7 @@
 #+TITLE: Java: Generic Programming
 #+AUTHOR: angus zhang
 #+DATE: 2019-01-16T16:49:35CST
-#+TAGS: 
+#+TAGS: java generic
 
 范型加入于java SE5.0(JSR 14)，虽然多拿来与 C++ template 作比较，实际上受函数式语言(ML/haskell)的 parametric polymorphism 启发。
 
@@ -105,8 +105,8 @@ foo.setValue("bb"); // Error, incompatible types
 
 #+BEGIN_SRC java
 Foo<? super String> foo = new Foo<>("aa");
-foo.setValue("bb"); // OK, since it require something inferior to <? super String>, which is superior to String.
-String s = foo.getValue(); // Error, incompatible type
+foo.setValue("bb"); // OK, since it requires something inferior to <? super String>, which is superior to String.
+String s = foo.getValue(); // Error, incompatible types
 Object o = foo.getValue(); // OK
 #+END_SRC
 
@@ -270,8 +270,6 @@ class SubFoo extends Foo {
 看强调部分，原来 javac 已经帮忙 override ~Foo::setValue(Object)~ 并正确 delegate 到 ~SubFoo::setValue(String)~ 。这即所谓的的 bridge method。
 
 语义上我们可以把 ~Foo<String>~ 看作一个新生成的类，依赖于这种底层的周到服务。
-
-[[https://docs.oracle.com/javase/tutorial/java/generics/bridgeMethods.html#bridgeMethods][Effects of Type Erasure and Bridge Methods]]
 ** Method Overloading
 
 因类型擦除，不可指望依靠 type parameter 不同作方法 overloading
@@ -307,6 +305,7 @@ String middle = ArrayAlg.getMiddle("John", "Q.", "Public");
 #+BEGIN_SRC java
 double middle = ArrayAlg.getMiddle(3.14, 1729, 0);
 #+END_SRC
+
 因传入的参数类型不同，javac会试图找到它们共同的 supertype，即 Number & Comparable<...>，对应的返回值不能用 double 接收。
 
 ** generic constructor and generic class
@@ -322,6 +321,6 @@ new [<String>]MyClass<Integer>(""); // <string> could be inferenced and thus omi
 #+END_SRC
 * ref
 
-- [[https://docs.oracle.com/javase/tutorial/java/generics/index.html][Lesson: Generics (Updated) (The Java™ Tutorials > Learning the Java Language)]]
-- /core java 10th/
-- [[https://www.zhihu.com/question/28665443/answer/118148143][Java不能实现真正泛型的原因？ - 知乎]]
+1. [[https://docs.oracle.com/javase/tutorial/java/generics/index.html][Lesson: Generics (Updated) (The Java™ Tutorials > Learning the Java Language)]]
+2. /core java 10th/
+3. [[https://www.zhihu.com/question/28665443/answer/118148143][Java不能实现真正泛型的原因？ - 知乎]]
