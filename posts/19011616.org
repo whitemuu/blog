@@ -1,11 +1,11 @@
 #+TITLE: Java: Generic Programming
 #+AUTHOR: angus zhang
 #+DATE: 2019-01-16T16:49:35CST
-#+TAGS: java generic
+#+TAGS: java generic pl
 
 范型加入于java SE5.0(JSR 14)，虽然多拿来与 C++ template 作比较，实际上受函数式语言(ML/haskell)的 parametric polymorphism 启发。
 
-范型的加入拓展了编译期(javac)的类型检查的范围(type parameters)，省略了不必要的类型cast，使得代码更加精简。
+范型的加入拓展了编译期(javac)的类型检查的范围(type parameters)，省略了不必要的类型cast，精简了代码，增加了可读性。
 
 使用范型很简单，定义范型则需考虑颇多，并不是一个简单的话题，毕竟范型这个 proposal 讨论了五年才加入。本文仅作入门读物。
 
@@ -120,7 +120,7 @@ foo1.setValue("bb"); //Error
 // raw type
 Foo foo2 = new Foo("aa");
 Object o2 = foo2.getValue();
-foo4.setValue(new Object()); // OK
+foo2.setValue(new Object()); // OK
 #+END_SRC
 
 *** TODO Wildcard Capture and Helper Methods
@@ -134,7 +134,7 @@ Collection<String> <- List<String> <- ArrayList<String>
 
 *** is Foo<integer> subtype of Foo<Number> ?
 
-if so，generics is polluted，as follows
+No. If so，generics is polluted，as follows
 #+BEGIN_SRC java
 ArrayList<Integer> integers = new ArrayList<>();
 ArrayList<Number> numbers  = integers; //error OFC. if not, disaster follows

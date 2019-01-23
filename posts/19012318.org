@@ -1,0 +1,154 @@
+#+TITLE: 使用无头浏览器爬取拉钩网
+#+AUTHOR: angus zhang
+#+DATE: 2019-01-23T18:23:55CST
+#+TAGS: 
+
+* 源起
+
+与现实脱节太久，查看一下目前 Java 技术栈都包含些什么。
+* for noobs
+
+无头浏览器(headless)，即使用指令操作没有UI的浏览器，主要应用于爬虫，因为一些非静态页面需要运行 js 渲染。
+
+之前人们所使用的无头浏览器是PhantomJS，Google Chrome 提供无头模式之后宣告 PhantomJS 项目完成历史使命，致敬。
+
+[[https://github.com/GoogleChrome/puppeteer][puppeteer]] 是为 node 提供的 Headless Chrome 的 API
+* 实现
+
+用北京和Java两个关键字
+主要思路如下：
+#+BEGIN_EXAMPLE
+while(true) {
+    visit https://www.lagou.com/jobs/list_java?px=default&city=北京 to get $position_page_links in current page
+    async visit all $position_page_links and get needed $data
+    click next page if available, otherwise break  
+}
+save $data to csv when all async resolved
+#+END_EXAMPLE
+
+其实拉钩分页是有专门的ajax API的，但不知是它反爬还是我的原因，一致不给我数据。干脆用无头浏览器好了。
+
+即便如此爬的时候又发现不几次就会甩给我一个登录页面。
+
+登录就登录呗，又遇到各种反爬验证，最后卡在了类似12306.com的验证码，还好可以用微信登录不需验证码，最终靠把二维码 screenshot 出来扫码实现登录。
+
+扫码登录也不是次次成功的。
+[[../static/190123151541.png][don't jump bitch]]
+
+代码：
+#+BEGIN_SRC js
+const puppeteer = require('puppeteer')
+const fs = require('fs')
+
+const techs = {}
+let visitedPages = 0
+let pageNumber = 1
+
+function wait(time) {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
+async function fetchPositionsHeadless(links, browser) {
+  try {
+    const page = await browser.newPage()
+    for(link of links) {
+      console.log('navigating to ' + link)
+      try {
+        await page.goto(link)
+        await page.pdf({path: 'position.pdf', format: 'A4'}); // for debug
+        try {
+          const content = await page.evaluate(() => document.querySelector('.job-detail').textContent) // login page may appear here
+          visitedPages += 1
+          content.match(/[a-zA-Z]+\w*/g).forEach(e => {
+            e = e.toLowerCase()
+            if (techs[e] !== undefined) techs[e] += 1
+            else techs[e] = 1
+          })
+        } catch (e) {
+          console.log('login page?')
+          console.log(e)
+        }
+      } catch (e) {
+        console.log('time out')
+      }
+    }
+    await page.close()
+  } catch (e) {
+    console.log('------ sub routine error ------')
+    console.log(e)
+    console.log('------ sub routine error ------')
+  }
+}
+
+;(async () => {
+  try {
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.goto('https://passport.lagou.com/login/login.html')
+
+    await page.click('body > section > div.qr_code_content > div.mobile-info')
+    await page.screenshot({path: 'login.png'})
+    const execSync = require('child_process').execSync
+    execSync('open login.png')
+
+    // wait for login
+    var readline = require('readline-sync')
+    var name = readline.question("hit enter if done:")
+    console.log('go go go...')
+
+    await page.screenshot({path: 'afterlogin.png'})
+    execSync('open afterlogin.png')
+
+    await page.goto('https://www.lagou.com/jobs/list_java?px=default&city=%E5%8C%97%E4%BA%AC')
+    let tasks = []
+    while (true) {
+      const currentPageLinks = await page.evaluate(() => {
+        let eles = Array.from(document.querySelectorAll('a.position_link'))
+        return eles.map(e => e.href)
+      })
+
+      tasks.push(fetchPositionsHeadless(currentPageLinks, browser))
+
+      if (await page.$('span.pager_next_disabled')) break
+      console.log('click -> page ' + ++pageNumber)
+      await page.click('span.pager_next')
+      await wait(2000)
+    }
+
+    Promise.all(tasks).then(async () => {
+      let arr = []
+      Object.keys(techs).forEach(key => arr.push([key, techs[key]]))
+      arr.sort((a, b) => b[1] - a[1])
+      let csv = arr.reduce((sum, e) => `${sum}${e[0]},${e[1]}\n`, '')
+      fs.writeFile('out.csv', csv, err => {
+        if (err) console.log(err)
+        console.log('csv saved!')
+      })
+      await browser.close()
+      console.log(visitedPages + ' positions logged')
+    })
+  }catch (e) {
+    console.log('--- caught error -------')
+    console.log(e)
+    console.log('--- caught error -------')
+  }
+})();
+#+END_SRC
+
+即便登录了，爬了许久还是出现了另一个护家犬
+[[../static/190123152412.png][blocked]]
+最后爬了380个数据，总数应当是 450(15 * 30) 个 ，算了就这样吧
+#+BEGIN_EXAMPLE
+...
+380 positions logged
+csv saved!
+#+END_EXAMPLE
+
+手动整理一下数据：
+- 合并 js/javascript
+- 合并 ibatis/mybatis
+- 删除 ip 列因为几本来自 TCP/IP，保留 TCP 就好
+- ...
+
+最终结果：
+[[../static/190123182318.png][out]]
