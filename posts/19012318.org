@@ -1,7 +1,7 @@
 #+TITLE: 使用无头浏览器爬取拉钩网
 #+AUTHOR: angus zhang
 #+DATE: 2019-01-23T18:23:55CST
-#+TAGS: 
+#+TAGS: node crawler headless
 
 * 源起
 
@@ -137,6 +137,7 @@ async function fetchPositionsHeadless(links, browser) {
 
 即便登录了，爬了许久还是出现了另一个护家犬
 [[../static/190123152412.png][blocked]]
+
 最后爬了380个数据，总数应当是 450(15 * 30) 个 ，算了就这样吧
 #+BEGIN_EXAMPLE
 ...
