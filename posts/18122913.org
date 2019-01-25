@@ -210,8 +210,8 @@ nichijou.city/post/41N5/set-global-variable-locally ✓ not bad
 不过：
 #+BEGIN_QUOTE
 Google doesn't process data instantly, you'd need to subscribe to the realtime analytics and cache
-the data to display live on your site. -- [[https://www.quora.com/Can-I-use-Google-Analytics-as-a-public-page-view-counter][Can I use Google Analytics as a public page view
-counter? - Quora]]
+the data to display live on your site.
+-- [[https://www.quora.com/Can-I-use-Google-Analytics-as-a-public-page-view-counter][Can I use Google Analytics as a public page view counter? - Quora]]
 #+END_QUOTE
 
 数据会有一定的滞后性，但不觉得这是个问题。

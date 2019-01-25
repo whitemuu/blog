@@ -1,0 +1,122 @@
+#+TITLE: URL encoding in a nutshell
+#+AUTHOR: angus zhang
+#+DATE: 2019-01-24T15:35:45CST
+#+TAGS: url uri endcoding cryptography
+
+* intro
+
+# 保留字符(reserved characters) 因为有特殊语义，乱用会造成语义混淆。
+
+# 比如 ~/~ 是路径分隔符，如果想将该字符用作路径分隔之外，为避免歧义，需要escape，当然，简单escape的方案是可行的，比如
+# #+BEGIN_EXAMPLE
+# nichijou.city/post/how-to-mkdir-recursively-like-foo\/bar
+# #+END_EXAMPLE
+
+# 理论上可行，但可读性就完全扑街了。
+
+根据 ~RFC 3986~ ,URI/URL 中只能包含以下字符。
+# #+BEGIN_QUOTE
+# only alphanumerics, the special characters "$-_.+!*'(),", and reserved characters used for their reserved purposes may be used unencoded within a URL.
+# -- [[https://www.ietf.org/rfc/rfc1738.txt][https://www.ietf.org/rfc/rfc1738.txt]]
+# #+END_QUOTE
+
+| Set          | characters                                                                                                                  | URL usage                                                |
+|--------------+-----------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------|
+| Alphanumeric | a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 | Text strings, scheme usage (=http=), port (=8080=), etc. |
+| Unreserved   | _ - . ~                                                                                                                     | Text strings                                             |
+| Reserved     | ! * ' ( ) ; : @ & = + $ , / ? % # [ ]                                                                                       | Control characters and/or Text Strings                   |
+
+以下字符因不同原因需要 encode:
+- Reserved Characters :: 当作普通字符使用时
+- ASCII Control Characters :: 非可打印字符
+- Non-ASCII 字符 :: URL规范不支持
+- Unsafe characters :: for different reasons
+
+URL encoding。因其使用 ~%~ 作为escape character，故亦称做Percent-encoding
+* 编码规则
+
+** Reserved Characters & ASCII Control Characters
+
+取其十六进制 ASCII 码，并在前面加上escape character ~%~， 大小写不限。
+
+| ~!~ | ~#~ | $   | &   | '   | (   | )   | *   | +   | ,   | /   | ~:~ | ;   | ~=~ | ?   | @   | [   | ]   |
+| %21 | %23 | %24 | %26 | %27 | %28 | %29 | %2A | %2B | %2C | %2F | %3A | %3B | %3D | %3F | %40 | %5B | %5D |
+
+** Escape Character
+
+~%~ 既然做了escape character，想使用其本身时也需要escape，即 ~%25~ 。
+** space
+
+=%20= 或者 =+=
+** Alphanumeric & unreserved
+
+可按同样规律编码但不推荐。
+** Unsafe Characters
+
+| Unsafe character | Encoded value |
+|------------------+---------------|
+| Space            | %20           |
+| "                | %22           |
+| <                | %3C           |
+| >                | %3E           |
+| ~#~              | %23           |
+| %                | %25           |
+| \vert            | %7C           |
+** non-ASCII character
+
+依据RFC 3986，非 ascii 字符根据 utf-8 转换为 bytes，在对这些bytes进行 percent-encode。
+
+如 ~萌~ 对应 utf-8 为 =E8908C= ，URL编码即为 =%E8%90%8C= 。
+# ** RFC 3987
+# * COMMENT 谁干的？
+# ** 浏览器
+# 由于URI/URL不支持
+# * COMMENT application/x-www-form-urlencoded
+* simple implementation
+#+BEGIN_SRC perl
+my %reserverd = qw{
+! %21  ~ %23  $ %24  & %26  ' %27  ( %28  ) %29  * %2A  + %2B
+, %2C  / %2F  ~ %3A  ; %3B  ~ %3D  ? %3F  @ %40  [ %5B  ] %5D
+% %25};
+$reserverd{' '} = '+';
+
+sub get_u8_hex{
+    my $char = shift;
+    return 0 if ord $char < 127;
+    my ($hex) = unpack('H*', $char);
+    uc join('', map { "%$_" } unpack('(A2)*', $hex))
+}
+
+sub percent_encode{
+    my $str = shift;
+    join("", map { $reserverd{$_} || get_u8_hex($_) || $_  } split('', $str));
+}
+
+print percent_encode('a/萌'); #=> a%2F%E8%90%8C
+#+END_SRC
+* common API
+
+Javascript 
+#+BEGIN_SRC js
+var uri = 'https://mozilla.org/?x=шеллы';
+var encoded = encodeURI(uri);
+console.log(encoded);
+// expected output: "https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B"
+
+try {
+  console.log(decodeURI(encoded));
+  // expected output: "https://mozilla.org/?x=шеллы""
+} catch(e) { // catches a malformed URI
+  console.error(e);
+}
+#+END_SRC
+
+source: [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI][encodeURI() | MDN]]
+* ref
+
+1. ! [[https://developers.google.com/maps/documentation/urls/url-encoding][URL Encoding  |  Maps URLs  |  Google Developers]]
+2. [[https://en.wikipedia.org/wiki/Percent-encoding][Percent-encoding - Wikipedia]]
+3. [[https://developer.mozilla.org/en-US/docs/Glossary/percent-encoding][Percent-encoding | MDN]]
+4. [[https://tools.ietf.org/html/rfc3986][RFC 3986 - Uniform Resource Identifier (URI): Generic Syntax]]
+5. [[https://stackoverflow.com/questions/912811/what-is-the-proper-way-to-url-encode-unicode-characters][utf 8 - What is the proper way to URL encode Unicode characters? - Stack Overflow]]
+6. [[https://perishablepress.com/stop-using-unsafe-characters-in-urls/][(Please) Stop Using Unsafe Characters in URLs | Perishable Press]]
