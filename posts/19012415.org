@@ -37,9 +37,9 @@ URL encoding。因其使用 ~%~ 作为escape character，故亦称做Percent-enc
 
 ** Reserved Characters & ASCII Control Characters
 
-取其十六进制 ASCII 码，并在前面加上escape character ~%~， 大小写不限。
+取其十六进制 ASCII 码，并在前面加上escape character ~%~ ， 大小写不限。
 
-| ~!~ | ~#~ | $   | &   | '   | (   | )   | *   | +   | ,   | /   | ~:~ | ;   | ~=~ | ?   | @   | [   | ]   |
+| ~!~ | ~#~ | ~$~ | ~&~ | ~'~ | ~(~ | ~)~ | ~*~ | ~+~ | ~,~ | ~/~ | ~:~ | ~;~ | ~=~ | ~?~ | ~@~ | ~[~ | ~]~ |
 | %21 | %23 | %24 | %26 | %27 | %28 | %29 | %2A | %2B | %2C | %2F | %3A | %3B | %3D | %3F | %40 | %5B | %5D |
 
 ** Escape Character
