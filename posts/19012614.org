@@ -1,0 +1,147 @@
+#+TITLE: Base64 in a nutshell
+#+AUTHOR: angus zhang
+#+DATE: 2019-01-26T14:59:06CST
+#+TAGS: base64 cryptography in-a-nutshell
+
+* 动机
+
+寻求一种可靠的尽量高压缩的字符编码来储存二进制数据(即任何东西)。
+
+
+* 为甚么要 64 based？
+
+ASCII 里最常用的可打印字符即 alphanumeric 共62(10 + 26*2)个。要表示二进制必须用以下数值作为 radix，
+其中六位二进制共有64种表示，与62最接近，只需再增加两个字符即可。
+
+#+BEGIN_EXAMPLE
+1 2
+11 4
+111 8
+1111 16
+11111 32
+111111 64
+1111111 128 
+#+END_EXAMPLE
+
+另外和以32(5 bits)为基数相比，除了单字符能表示的 bits 更多之外，还有个附加的好处，即 5 和 8 的最小公倍数是 40，而 6 和 8 的最小公倍数是 24。当 bits 不足时需要填充的位数更少。
+* 编码规则
+
+另外两个字符选用 ~+~ 和 ~/~ 。
+
+用 [A-Za-z0-9+/] 分别对应 0~63 。
+
+对 binary data 每三个 bytes 用 4 个字符表示，如果最后多余一个 bytes
+#+BEGIN_EXAMPLE
+   remainder   padding 0's
+┌─────────────┐ ┌─────┐
+1 1 1 1 1 1 1 1 0 0 0 0 x x x x x x x x x x x x
+└─────────┘ └─────────┘ └─────────┘ └─────────┘
+     /           w           =           =
+#+END_EXAMPLE
+
+如果多余两个 bytes
+#+BEGIN_EXAMPLE
+           remainder         padding 0's
+┌─────────────────────────────┐ ┌─┐
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 x x x x x x
+└─────────┘ └─────────┘ └─────────┘ └─────────┘
+     /           /           8           =
+#+END_EXAMPLE
+
+编码后的base64可任意使用 空格 和 换行符 进行格式化，解码时这两种字符应忽略。
+
+* Implementation
+
+对字符串进行 base64 编码
+#+BEGIN_SRC perl
+my @radix64 = ('A'..'Z', 'a'..'z', '0'..'9', '+', '/');
+
+sub decodeBase64{
+...
+}
+
+sub encodeBase64{
+    my $str = shift;
+    my ($bin) = unpack("B*", $str);
+    my $modulus = (length $bin) % 24;
+    if ($modulus == 16) {
+        $bin .= '00';
+        return toRadix64($bin) . '=';
+    } elsif ($modulus == 8) {
+        $bin .= '0000';
+        return toRadix64($bin) . '==';
+    } else {
+        return toRadix64($bin);
+    }
+
+    # main::toRadix64, bad practice.
+    sub toRadix64{
+        my $bin = shift;
+        join('', map { $radix64[oct('0b'.$_)] } unpack('(A6)*', $bin))
+    }
+}
+
+print encodeBase64('angusbike@gmail.com') #=> YW5ndXNiaWtlQGdtYWlsLmNvbQ==
+#+END_SRC
+
+* APIs
+
+javascript(browser environment):
+#+BEGIN_SRC js
+atob('abc') // YWJj
+btoa('YWJj') // abc
+#+END_SRC
+
+node:
+#+BEGIN_SRC js
+let buffer = Buffer.from('abc')
+let s = buffer.toString('base64')
+console.log(s) //=> YWJj
+s = Buffer.from(s, 'base64').toString('utf-8')
+console.log(s) //=> abc
+#+END_SRC
+
+java:
+[[https://www.baeldung.com/java-base64-encode-and-decode][Java Base64 Encoding and Decoding | Baeldung]]
+
+perl: 
+#+BEGIN_SRC perl
+use MIME::Base64;
+
+my $ori = 'abc';
+# this api auto truncate and add new-line to the end
+my $enc = encode_base64($ori);
+print "encoded: $enc"; #=> encoded: YWJj
+print "decoded: ", decode_base64($enc); #=> decoded: abc
+#+END_SRC
+
+emacs lisp: 
+#+BEGIN_SRC elisp
+(base64-encode-string "angusbike@gmail.com") ;=> YW5ndXNiaWtlQGdtYWlsLmNvbQ==
+(base64-decode-string "YW5ndXNiaWtlQGdtYWlsLmNvbQ==") ;=> angusbike@gmail.com
+#+END_SRC
+* 应用
+** 储存图片
+
+小的图片十分适宜用base64编码，可以直接嵌入html，避免二次请求，比如本页最上的 creative commmons 标志就是用的 base64 编码。
+
+#+BEGIN_SRC html
+<img src="data:image/jpeg;base64,iVBORw0K...">
+#+END_SRC
+
+online tool: 
+[[https://onlinepngtools.com/convert-png-to-base64][Convert PNG to Base64 - Online PNG Tools]]
+** 作为安全的文本储存
+
+比如github api
+#+BEGIN_EXAMPLE
+https://api.github.com/repos/whitemuu/blog/contents/posts/19012415.org
+#+END_EXAMPLE
+
+content字段即经过base64编码，因为其使用有限个字符，不会出现 ~'~ ~"~ 等字符干扰json格式。
+** Base64URL
+
+有了base64，我们就能通过 URL 传送 binary data 了，不过 Base64 有三个字符 ~+/=~ ，在 URL 里面有特殊含义，所以要被替换掉：~=~ 被省略， ~+~ 替换成 - ， ~/~ 替换成 ~_~ 。
+* ref
+
+- [[https://en.wikipedia.org/wiki/Base64][Base64 - Wikipedia]]

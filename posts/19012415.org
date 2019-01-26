@@ -1,7 +1,7 @@
 #+TITLE: URL encoding in a nutshell
 #+AUTHOR: angus zhang
 #+DATE: 2019-01-24T15:35:45CST
-#+TAGS: url uri endcoding cryptography
+#+TAGS: url uri endcoding cryptography in-a-nutshell
 
 * intro
 

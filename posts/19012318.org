@@ -33,6 +33,7 @@ save $data to csv when all async resolved
 登录就登录呗，又遇到各种反爬验证，最后卡在了类似 12306.com 的验证码，还好发现可以用微信登录不需验证码，最终靠把二维码 screenshot 出来扫码实现登录。
 
 扫码登录也不是次次成功的。
+
 [[../static/190123151541.png][don't jump bitch]]
 
 代码：
@@ -136,6 +137,7 @@ async function fetchPositionsHeadless(links, browser) {
 #+END_SRC
 
 即便登录了，爬了许久还是出现了另一个护家犬
+
 [[../static/190123152412.png][blocked]]
 
 最后爬了380个数据，总数应当是 450(15 * 30) 个 ，算了就这样吧
@@ -152,4 +154,5 @@ csv saved!
 - ...
 
 最终结果：
+
 [[../static/190123182318.png][out]]
