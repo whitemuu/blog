@@ -1,4 +1,4 @@
-#+TITLE: 设置密钥登录 SSH  
+#+TITLE: 设置密钥登录 SSH
 #+AUTHOR: angus zhang
 #+DATE: 2019-01-27T00:07:52CST
 #+TAGS: SSH cryptography how-to
@@ -15,9 +15,7 @@ message ------> gibberish ------> message
 
 两个key，key1 加密的信息只有 key2 能解密，反过来 key2 加密的信息也仅有 key1 能解密。即非对称加密。
 
-如果我把 key2 公开，分发给需要验证我的人，那么我发送一段经 key1 加密过的信息给对方，对方如果能够用
-key2 解密出正确的信息，那么可以肯定 该信息必然由 key1 加密，而只有我手里有 key1，那么刻意断定一定是
-我发送的信息，籍此完成身份验证。这就是 Public-key cryptography。
+如果我把 key2 公开，分发给需要验证我的人，那么我发送一段经 key1 加密过的信息给对方，对方如果能够用 key2 解密出正确的信息，那么可以肯定 该信息必然由 key1 加密，而只有我手里有 key1，那么可以断定一定是我发送的信息，籍此完成身份验证。这就是 =Public key authentication= 。
 
 * 有这个必要吗？
 
@@ -36,11 +34,9 @@ Last login: Sat Jun  4 10:49:32 2016 from *.*.*.*
 
 #+BEGIN_SRC bash
 $ ssh-keygen -t rsa
+# ssh-keygen generates, manages and converts authentication keys for ssh(1).
+#                                                           -- ssh-keygen(1)
 #+END_SRC
-
-#+BEGIN_QUOTE
-ssh-keygen generates, manages and converts authentication keys for ssh(1).
-#+END_QUOTE
 
 期间会询问存储路径和passphrase，按 enter 使用默认即可
 
@@ -70,16 +66,16 @@ $ ssh-copy-id {targethost}
 #+BEGIN_EXAMPLE conf
 PubkeyAuthentication yes
 AuthorizedKeyFile  .ssh/authorized_keys
-PasswordAuthentication no # ⚠️请确保密钥登录正常工作再禁用该条即密码登录！！
+PasswordAuthentication no  #⚠️请确保密钥登录正常工作再禁用该条即密码登录！！
 ChallengeResponseAuthentication no
 #+END_EXAMPLE
 
 重启 sshd
 #+BEGIN_SRC bash
-$ service sshd reload(restart?)
+$ service sshd restart
 #+END_SRC
 
-all done.
+all done!
 ** debug
 
 如密钥登录失败请用如下技巧debug(需root用户):
@@ -88,6 +84,7 @@ root 身份密码(希望你没禁用密码登录) ssh 到远程主机。
 #+BEGIN_SRC bash
 $ /usr/sbin/sshd -d -p 2222
 #+END_SRC
+
 -d 表示 debug mdoe
 
 然后从本机连接该 sshd
