@@ -204,15 +204,15 @@ Java 出于字节码向后兼容性原因，采用 Type Erasure 实现范型。�
 
 因java范型只存在于编码期，以下反射代码不受泛型限制。
 #+BEGIN_SRC java
-  ArrayList<Integer> list = new ArrayList<>();
-  list.add(111);
-  list.add(222);
+ArrayList<Integer> list = new ArrayList<>();
+list.add(111);
+list.add(222);
 
-  Class clazz =  Class.forName("java.util.ArrayList");
-  Method m = clazz.getMethod("add", Object.class);
-  m.invoke(list, "ABC");
+Class clazz =  Class.forName("java.util.ArrayList");
+Method m = clazz.getMethod("add", Object.class);
+m.invoke(list, "ABC");
 
-  System.out.println(list);
+System.out.println(list);
 #+END_SRC
 
 ** 类型擦除的多态困境与 Bridge Methods

@@ -1,0 +1,111 @@
+#+TITLE: 设置密钥登录 SSH  
+#+AUTHOR: angus zhang
+#+DATE: 2019-01-27T00:07:52CST
+#+TAGS: SSH cryptography how-to
+
+* 非对称加密
+
+# 先提一下发音问题，正确发音应该是密钥(yue)，很多人读密钥(yao)，所以将来也背不住会改，所以挑一个自己喜欢的算了。
+
+#+BEGIN_EXAMPLE
+          key1              key2
+           ↓ encrypt         ↓ decrypt
+message ------> gibberish ------> message
+#+END_EXAMPLE
+
+两个key，key1 加密的信息只有 key2 能解密，反过来 key2 加密的信息也仅有 key1 能解密。即非对称加密。
+
+如果我把 key2 公开，分发给需要验证我的人，那么我发送一段经 key1 加密过的信息给对方，对方如果能够用
+key2 解密出正确的信息，那么可以肯定 该信息必然由 key1 加密，而只有我手里有 key1，那么刻意断定一定是
+我发送的信息，籍此完成身份验证。这就是 Public-key cryptography。
+
+* 有这个必要吗？
+
+不只是方便。
+
+#+BEGIN_EXAMPLE
+Last failed login: Mon Jun  6 02:45:00 UTC 2016 from 116.31.116.50 on ssh:notty
+There were 17905 failed login attempts since the last successful login.
+Last login: Sat Jun  4 10:49:32 2016 from *.*.*.*
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+#+END_EXAMPLE
+
+这是我16年所使用的 vultr vps，经历了至少两次这样的暴力破解。我当然不是个例 [[https://serverfault.com/questions/244614/is-it-normal-to-get-hundreds-of-break-in-attempts-per-day][linux - Is it normal to get hundreds of break-in attempts per day? - Server Fault]]
+* 步骤
+** 在本机生成密钥
+
+#+BEGIN_SRC bash
+$ ssh-keygen -t rsa
+#+END_SRC
+
+#+BEGIN_QUOTE
+ssh-keygen generates, manages and converts authentication keys for ssh(1).
+#+END_QUOTE
+
+期间会询问存储路径和passphrase，按 enter 使用默认即可
+
+之后会生成如下两个base64编码的纯文本文件，⚠️私钥请妥善保管：
+- =~/.ssh/id_rsa= :: 私钥
+- =~/.ssh/id_rsa.pub= :: 公钥
+
+** 安装公钥到服务器
+
+即将公钥拷贝到服务器 =~/.ssh/authorized_keys= 中，注意这个复数的文件名，是可以放置多个公钥来 authenticate 多个远程机器的。
+
+如果服务器只有你一个人使用可直接
+#+BEGIN_SRC bash
+$ scp ~/.ssh/id_rsa.pub john-doe@xxx.xxx.xxx.xxx:~/.ssh/authorized_keys
+#+END_SRC
+
+或者linux用户可使用如下命令
+#+BEGIN_SRC bash
+$ ssh-copy-id {targethost}
+#+END_SRC
+
+其它情况请密码 ssh 登录手动拷贝。
+
+** sshd 配置
+
+~/etc/ssh/sshd_config~
+#+BEGIN_EXAMPLE conf
+PubkeyAuthentication yes
+AuthorizedKeyFile  .ssh/authorized_keys
+PasswordAuthentication no # ⚠️请确保密钥登录正常工作再禁用该条即密码登录！！
+ChallengeResponseAuthentication no
+#+END_EXAMPLE
+
+重启 sshd
+#+BEGIN_SRC bash
+$ service sshd reload(restart?)
+#+END_SRC
+
+all done.
+** debug
+
+如密钥登录失败请用如下技巧debug(需root用户):
+
+root 身份密码(希望你没禁用密码登录) ssh 到远程主机。
+#+BEGIN_SRC bash
+$ /usr/sbin/sshd -d -p 2222
+#+END_SRC
+-d 表示 debug mdoe
+
+然后从本机连接该 sshd
+#+BEGIN_SRC bash
+$ ssh -p 2222 user@host
+#+END_SRC
+
+远程主机即会提供 debug 信息。
+
+source: [[https://unix.stackexchange.com/questions/36540/why-am-i-still-getting-a-password-prompt-with-ssh-with-public-key-authentication][Why am I still getting a password prompt with ssh with public key authentication? - Unix & Linux Stack Exchange]]
+* 管理多个密钥
+
+[[https://superuser.com/questions/586890/can-i-have-more-than-1-private-key-in-ssh][linux - Can I have more than 1 private key in ~/.ssh? - Super User]]
+* ref
+
+1) [[https://www.cyberciti.biz/tips/ssh-public-key-based-authentication-how-to.html][SSH Public Key Based Authentication on a Linux/Unix server - nixCraft]]
+2) =man 1 ssh-keygen=
+3) [[https://www.vultr.com/docs/how-do-i-generate-ssh-keys][How Do I Generate SSH Keys? - Vultr.com]]
+4) [[https://help.github.com/articles/connecting-to-github-with-ssh/][Connecting to GitHub with SSH - User Documentation]]
+5) [[https://gist.github.com/jexchan/2351996][Multiple SSH keys for different github accounts]]
+6) [[http://www.runoob.com/w3cnote/set-ssh-login-key.html][设置 SSH 通过密钥登录 | 菜鸟教程]]
