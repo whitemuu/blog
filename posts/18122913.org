@@ -1,6 +1,6 @@
 #+TITLE: about this blog
 #+AUTHOR: angus zhang
-#+DATE: 2018-12-29T13:07:33CST
+#+DATE: 2019-01-28T18:21:23CST
 #+TAGS: blog node url domain recommend
 
 * 前传
@@ -84,9 +84,17 @@ history.pushState(null, null, '/notes') // change the whole path
 
 =history.replaceState= 方法顾名思义，替换当前，被替换的部分丢失，所以想不保留历史时用该方法。
 
+** SEO
+
+从 [[https://www.youtube.com/watch?v=RAhYnK0v3rk][Server-side Rendering]] 了解到 google '部分'支持js，但用的是chrome41(视频时间2017-11-17)，我的博客用了 Promise, fetch API 等，暂时未做 polyfill，所以只能被google索引到一个首页🙄
+
+可以用 =fetch as google= 测试你需要js渲染的网页能否被 Google 正确爬取。
+
 ** ref
+
 1. [[https://medium.com/frontend-fun/js-vanilla-script-spa-1b29b43ea475][Js: Vanilla SPA – Frontend Fun – Medium]]
 2. [[https://stackoverflow.com/questions/1397329/how-to-remove-the-hash-from-window-location-url-with-javascript-without-page-r][How to remove the hash from window.location (URL) with JavaScript without page refresh? - Stack Overflow]]
+3. [[https://medium.com/@l.mugnaini/spa-and-seo-is-googlebot-able-to-render-a-single-page-application-1f74e706ab11][SPA and SEO: Google (Googlebot) properly renders Single Page Application and execute Ajax calls]]
 * Domain
 
 从 namecheap.com 购入 =nichijou.city= (/Nichijou/ 和 /City/ 都是 [[https://twitter.com/himaraya][あらゐけいいち]] 老师作品)

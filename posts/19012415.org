@@ -1,6 +1,6 @@
 #+TITLE: URL encoding in a nutshell
 #+AUTHOR: angus zhang
-#+DATE: 2019-01-24T15:35:45CST
+#+DATE: 2019-01-27T16:51:58CST
 #+TAGS: url uri encoding cryptography in-a-nutshell
 
 * intro
@@ -47,7 +47,7 @@ URL encoding。因其使用 ~%~ 作为escape character，故亦称做Percent-enc
 ~%~ 既然做了escape character，想使用其本身时也需要escape，即 ~%25~ 。
 ** space
 
-=%20= 或者 =+=
+You should use =%20= before the =?= in URL and =+= after.
 ** Alphanumeric & unreserved
 
 可按同样规律编码但不推荐。
@@ -120,3 +120,4 @@ source: [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Glob
 4. [[https://tools.ietf.org/html/rfc3986][RFC 3986 - Uniform Resource Identifier (URI): Generic Syntax]]
 5. [[https://stackoverflow.com/questions/912811/what-is-the-proper-way-to-url-encode-unicode-characters][utf 8 - What is the proper way to URL encode Unicode characters? - Stack Overflow]]
 6. [[https://perishablepress.com/stop-using-unsafe-characters-in-urls/][(Please) Stop Using Unsafe Characters in URLs | Perishable Press]]
+7. [[https://stackoverflow.com/questions/1634271/url-encoding-the-space-character-or-20][URL encoding the space character: + or %20? - Stack Overflow]]

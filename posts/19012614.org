@@ -141,7 +141,7 @@ https://api.github.com/repos/whitemuu/blog/contents/posts/19012415.org
 content字段即经过base64编码，因为其使用有限个字符，不会出现 ~'~ ~"~ 等字符干扰json格式。
 ** Base64URL
 
-有了base64，我们就能通过 URL 传送 binary data 了，不过 Base64 有三个字符 ~+/=~ ，在 URL 里面有特殊含义，所以要被替换掉： ~=~ 被省略， ~+~ 替换成 - ， ~/~ 替换成 ~_~ 。
+有了base64，我们就能通过 URL 传送 binary data 了，不过 Base64 有三个字符 ~+/=~ ，在 URL 里面有特殊含义，所以要被替换掉： ~=~ 被省略， ~+~ 替换成 ~-~ ， ~/~ 替换成 ~_~ 。
 * ref
 
 - [[https://en.wikipedia.org/wiki/Base64][Base64 - Wikipedia]]

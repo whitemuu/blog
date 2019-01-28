@@ -98,6 +98,10 @@ source: [[https://unix.stackexchange.com/questions/36540/why-am-i-still-getting-
 * 管理多个密钥
 
 [[https://superuser.com/questions/586890/can-i-have-more-than-1-private-key-in-ssh][linux - Can I have more than 1 private key in ~/.ssh? - Super User]]
+# * Public key fingerprint
+
+# [[https://en.wikipedia.org/wiki/Public_key_fingerprint][Public key fingerprint - Wikipedia]]
+# [[https://stackoverflow.com/questions/9607295/how-do-i-find-my-rsa-key-fingerprint][ssh - How do I find my RSA key fingerprint? - Stack Overflow]]
 * ref
 
 1) [[https://www.cyberciti.biz/tips/ssh-public-key-based-authentication-how-to.html][SSH Public Key Based Authentication on a Linux/Unix server - nixCraft]]
