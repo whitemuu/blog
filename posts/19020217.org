@@ -5,7 +5,7 @@
 
 RSS 是 Really Simple Syndication 的首字母缩略词
 
-RSS 是美好开放互联网的体现之一，对其的割弃也体现了一些互联网企业逐利的本质。
+RSS 是美好开放互联网的体现之一；对其的割弃也体现了一些互联网企业逐利的本质(🙄这不自然的么，对不起我道德绑架了)。
 
 RSS 当下存在两派标准， =RSS系= 和 =atom= 。
 
@@ -176,7 +176,9 @@ sample:
 1. [[https://validator.w3.org/feed/#validate_by_uri][W3C Feed Validation Service, for Atom and RSS]]
 2. [[http://feedvalidator.sourceforge.net/][Feed Validator for Atom and RSS]]
 3. [[http://www.rssboard.org/rss-validator/][RSS Validator]] <- RSS only
-# * TODO Status Quo
+* Status Quo
+
+推荐月光博客九年前的博文：[[https://www.williamlong.info/archives/2381.html][RSS阅读时代的没落-月光博客]]
 * ref
 
 1. [[http://nullprogram.com/blog/2013/09/23/][Atom vs. RSS « null program]]
@@ -185,3 +187,4 @@ sample:
 4. [[https://www.w3schools.com/xml/xml_rss.asp][w3schools::XML RSS]]
 5. [[https://www.petefreitag.com/item/384.cfm][How to add RSS Autodiscovery to your site]]
 6. [[https://github.com/jekyll/jekyll-feed/issues/2][What feed format is best? · Issue #2 · jekyll/jekyll-feed]]
+7. [[http://www.williamlong.info/cat/?tags=Rss][tags::Rss-月光博客]]
