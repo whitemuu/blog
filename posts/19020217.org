@@ -188,3 +188,4 @@ sample:
 5. [[https://www.petefreitag.com/item/384.cfm][How to add RSS Autodiscovery to your site]]
 6. [[https://github.com/jekyll/jekyll-feed/issues/2][What feed format is best? · Issue #2 · jekyll/jekyll-feed]]
 7. [[http://www.williamlong.info/cat/?tags=Rss][tags::Rss-月光博客]]
+8. [[https://developer.mozilla.org/en-US/docs/Archive/RSS/Getting_Started/What_is_RSS][What is RSS - Archive of obsolete content | MDN]]
