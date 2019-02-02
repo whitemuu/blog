@@ -30,10 +30,10 @@ RSS 当下存在两派标准， =RSS系= 和 =atom= 。
 [[http://www.rssboard.org/rss-specification][RSS 2.0 Specification (version 2.0.11)]]
 
 <channel> 子标签：
-- required:
+- Required:
   - <title> :: name of channel
   - <link> :: website URL
-- optional:
+- Optional:
   - <language> :: 所用语言
   - <copyright> ::
   - <pubDate> :: 该 RSS 文件发布时间，格式遵循 RFC 3339 (Wed, 02 Oct 2002 08:00:00 EST)
@@ -92,6 +92,7 @@ IETF [[https://tools.ietf.org/html/rfc4287][RFC-4287]]
 全称 Atom Syndication Format, 目的在于取代 RSS 标准。
 
 ** Format
+
 <feed>子标签：
 - Required
   - <id> :: 通常用网站URI
