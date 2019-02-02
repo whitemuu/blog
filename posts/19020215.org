@@ -1,0 +1,43 @@
+#+TITLE: [译] 强类型与弱类型语言
+#+AUTHOR: angus zhang
+#+DATE: 2019-02-02T15:04:29CST
+#+TAGS: pl type variable
+
+[origin]: [[https://www.destroyallsoftware.com/compendium/strong-and-weak-typing?share_key=6b0dd1ec18ab6102][Strong and weak typing – Programmer's Compendium]]
+
+术语 strong 和 weak 其实相当模糊，如下是其可能的含义：
+
+- 有时，strong表示static，这很明了，但最好还是使用static毕竟我们对static没有歧义；
+- 有时strong表示“值类型之间不可隐式转换”。比如js允许 ="a" - 1= ，我们称此为 "weak typing"。但几乎所
+  有语言都提供不同程度的隐式转换，像 =1 - 1.1= 这样的整形到浮点数的转换。实际上多数如此理解
+  strong/weak typing 的人对于如何界定“何种程度的隐式转换才能算作 strong typing”并不能达成一致;
+- 有时，strong 意味着不允许逾越语言的类型规则(type rules);
+- 有时，strong 表示内存安全(memory-safe)，C是个典型的memory-unsafe的语言。举个例子，如 =xs= 是有4个
+  值的array，C允许代码如此索引 =xs[1000]=，即所有内存范围的的值都可作为合法索引。
+
+为了简洁就先到这儿。如下是一些语言对应每个含义所属的阵营。可见，唯独Haskell在任何意义上都是 strong 的，其他语言都或多或少的'混乱'。
+
+| Language   | Static? | Implicit Conversions? | Rules Enforced? | Memory-Safe? |
+|------------+---------+-----------------------+-----------------+--------------|
+| C          | Strong  | Depends               | Weak            | Weak         |
+| Java       | Strong  | Depends               | Strong          | Strong       |
+| Haskell    | Strong  | Strong                | Strong          | Strong       |
+| Python     | Weak    | Depends               | Strong          | Strong       |
+| JavaScript | Weak    | Weak                  | Weak            | Strong       |
+# |------------+---------+-----------------------+-----------------+--------------|
+# | Perl       | Weak    | Weak                  |                 | Strong       |
+
+(* "implicit Conversions?"列的“Depends”意思是其其强弱取决于阁下的标准)
+
+通常，术语strong和weak指的是上面提到的和没提到的各种含义的不明确组合。这些混淆使得strong/weak这种描
+述方式实际上失去了意义。每当阁下想使用它们来描述语言特性的时候，建议还是用更具体的描述来表达。比如我
+们可以如此讲“当我们去加一个string和integer时，Javascript会返回一个值，而python则会抛出一个error”。如
+此，我们就不必费心去一步步讨论strong的种种含义，甚至更糟的是，表面言语上达成了共识或分歧，脑袋里想的
+却是不同的东西。
+
+网络上多数对strong/weak的使用都是含混的的价值判断(value judgement)，它们作为高大上的术语外衣，被用来描述一个语言的好坏。正如 [[https://cdsmith.wordpress.com/2011/01/09/an-old-article-i-wrote/][Chris Smith]] 所讲：
+#+BEGIN_QUOTE
+Strong typing: A type system that I like and feel comfortable with
+
+Weak typing: A type system that worries me, or makes me feel uncomfortable
+#+END_QUOTE

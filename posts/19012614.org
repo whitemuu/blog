@@ -88,8 +88,8 @@ print encodeBase64('angusbike@gmail.com') #=> YW5ndXNiaWtlQGdtYWlsLmNvbQ==
 
 javascript(browser environment):
 #+BEGIN_SRC js
-atob('abc') // YWJj
-btoa('YWJj') // abc
+btoa('abc') // YWJj
+atob('YWJj') // abc
 #+END_SRC
 
 node:

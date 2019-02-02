@@ -1,11 +1,13 @@
 #+TITLE: 设置密钥登录 SSH
 #+AUTHOR: angus zhang
 #+DATE: 2019-01-27T00:07:52CST
-#+TAGS: SSH cryptography how-to
+#+TAGS: SSH cryptography how-to linux
 
 * 非对称加密
 
-# 先提一下发音问题，正确发音应该是密钥(yue)，很多人读密钥(yao)，所以将来也背不住会改，所以挑一个自己喜欢的算了。
+先提一下发音问题，词典给的发音是密钥(yue)，不过大多数人读的都是密钥(yao)，语言就是这么个东西，当多数人都错了的时候，就该改改规则了。所以大胆的继续读密钥(yao)吧。顺便，还有一部分制障看到的明明是'密钥'，却不自觉发出'密匙'的读音🙄。
+
+另外还有许多读mishi的制障
 
 #+BEGIN_EXAMPLE
           key1              key2
@@ -29,6 +31,8 @@ Last login: Sat Jun  4 10:49:32 2016 from *.*.*.*
 #+END_EXAMPLE
 
 这是我16年所使用的 vultr vps，经历了至少两次这样的暴力破解。我当然不是个例 [[https://serverfault.com/questions/244614/is-it-normal-to-get-hundreds-of-break-in-attempts-per-day][linux - Is it normal to get hundreds of break-in attempts per day? - Server Fault]]
+
+事实上这还不是个坏消息，因为这说明了我的主机是安全的，如果真的破解成功的话，对方就不会让你看到这些东西了。
 * 步骤
 ** 在本机生成密钥
 

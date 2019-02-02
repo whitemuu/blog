@@ -1,7 +1,7 @@
 #+TITLE: about this blog
 #+AUTHOR: angus zhang
-#+DATE: 2019-01-28T18:21:23CST
-#+TAGS: blog node url domain recommend
+#+DATE: 2019-01-31T20:35:28CST
+#+TAGS: blog node spa url domain recommend
 
 * 前传
 
@@ -60,7 +60,7 @@ org-mode 不似 markdown 通用，有多数软件默认支援，所以需要花�
 
 单页应用交互体验棒，响应迅速，但实现起来要复杂一些，好在博客本身复杂度不高。
 
-这里罗列一下用到的浏览器API。
+这里罗列一下用到的 =History API= 。
 
 #+BEGIN_SRC js
 // origin
@@ -83,6 +83,15 @@ history.pushState(null, null, '/notes') // change the whole path
 
 
 =history.replaceState= 方法顾名思义，替换当前，被替换的部分丢失，所以想不保留历史时用该方法。
+
+History API 仅限于当前 domain，即 SPA 没办法不经浏览器跳转就进入 subdomain ，bummer。
+
+当然还要把浏览器前进后退的行为交给 js 来处理
+#+BEGIN_SRC js
+window.onpopstate = () => {
+  route() // your route method, browser will change the address bar for you
+}
+#+END_SRC
 
 ** SEO
 
