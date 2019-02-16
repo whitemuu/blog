@@ -173,7 +173,7 @@ function slapZero(num, length) {
 function encodeDate(str) {
   const [year, month, day, hour] = str.match(/\d{2}/g)
   const date = new Date('20' + year, month - 1, day, hour)
-  let startOfDate = new Date(date.getFullYear(), 0, 0)
+  let startOfDate = new Date(date.getFullYear(), 0)
   let dayOfYear = Math.floor((date - startOfDate)/ (1000 * 60 * 60 * 24))
   return parseInt(year + slapZero((dayOfYear * 24 + date.getHours()).toString(), 4)).toString(36).toUpperCase()
 }
@@ -182,7 +182,7 @@ function decodeDate(str) {
   let date = parseInt(str, 36).toString()
   let [, year, hours] = date.match(/(\d{2})(\d{4})/)
   let days = Math.floor(hours / 24)
-  date = new Date((days * 24 * 60 * 60 * 1000) + (new Date('20' + year, 0, 0) - 0))
+  date = new Date((days * 24 * 60 * 60 * 1000) + (new Date('20' + year, 0) - 0))
   return year+ slapZero(date.getMonth() + 1, 2) + slapZero(date.getDate(), 2) + slapZero((hours % 24), 2)
 }
 #+END_SRC
