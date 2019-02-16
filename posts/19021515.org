@@ -1,0 +1,93 @@
+#+TITLE: [译] Java 值类型要来了吗？
+#+AUTHOR: angus zhang
+#+DATE: 2019-02-15T15:17:11CST
+#+TAGS: java jvm datatype
+
+subtitle: How Project Valhalla will simplify access to many Java objects.
+
+origin: [[http://www.javamagazine.mozaicreader.com/NovemberDecember2018/twitter#&pageSet=56&page=0][Java Magazine, November/December 2018, (56)]] by [[https://twitter.com/kittylyst?ref_src=twsrc%255Egoogle%257Ctwcamp%255Eserp%257Ctwgr%255Eauthor][Ben Evans]]
+
+本文将介绍 value types，一个潜在的 java/JVM 新特性。这个变化深远到可能影响 java 平台的方方面面 － 从性能到范型，甚至 Java 底层存储数据的方式。
+
+在理解什么是 value types，以及它讲如何改变你编程的方式之前，你需要了解到 java 11 为止 Java 是如何存储数据的。通过观察这个变化所涉及的方面和你使用 Java 方式的改变方便你把 value types 放在大背景中考察。
+
+* Current Types of Values
+
+自 Java 1.0 起，虚拟机只支持两种数据类型：基本数据类型(Primitive types)和引用数据类型(object references)。基本数据类型(int double..) 直接储存，不需额外的元信息。引用数据类型则是指向 Java 堆(heap)中一段内存的指针，该段内存有虚拟机通过垃圾回收(GC)单独管理。
+
+换句话说，Java 运行环境故意不提供底层的对内存的控制。具体地讲，这意味着 Java 不具备类似 C 中结构体的设施，任何复合数据类型都仅能通过引用访问。
+
+注意不同的虚拟机实现可能在存储类和引用时略有不用，为消歧义，本文只针对 HotSpot(Oracle JDK 和 OpenJDK 所使用的虚拟机)。
+
+HotSpot 在运行时用 oops(ordinary object pointers) 表示 objects，通常表示实例(instance)的oops 被称作 instanceOops。Java 引用即是 C 中的指针，并能储存到引用类型的变量里面。它们(引用)位于方法区的栈帧(stack frame)中并指向 Java 堆中的内存。
+
+具体来讲，所有引用都是指向它们所代表的对象的头(object header)。所有的Java 对象都通过引用来管理，所以所有的对象都必然有对象头。
+
+在 HotSpot 中，对象头信息由两个 machine word(16bits) 构成：第一个是 =mark word= ，包含关于该实例的元信息；第二个是 =klass word= ，指向该对象所属类的元信息。
+
+这两个字段对于理解 Java 如何实现特定语言特性均很重要，比如 klass word 被用来查找 Java method 的字节码。
+
+然而对于本文话题，mark word 则尤为重要，因为这里面储存着 Java 对象的 identity。当然其中还储存了对象的 monitor(就是它使得线程能够在同步状态对对象加锁)。
+
+为了一窥当下 Java 存值模型的效果，我们先来看看 array(当然，array 亦是一种 Java 对象) 的内存布局。如图，可以一个包涵基本数据类型 int 的 array，因为它们是基本数据类型，故可以相邻而居。
+
+[[../static/190215172656.png][Array of ints]]
+
+为和 object 构成的 array 比较，再来看其包装类 Integer 构成的 array。Integer array 所储存的是其元素的的引用，如下图所示，每个 Integer 还需要 header 的开销，毕竟它们都是对象。
+
+[[../static/190215172803.png][Array of Integer objects]]
+
+20年以来，Java 都是按该模型工作的，它相对简单，但也有性能牺牲 － 处理 Object 构成的 array 就牵涉到间接的指针和 cache miss 的代价。
+
+举个例子，一个表示三维空间中一点的类 Point3D，它仅包含三个 double 类型。到 Java 11 为止，你都需要按如下编码。
+
+#+BEGIN_SRC java
+public final class Point3D {
+    private final double x;
+    private final double y;
+    private final double z;
+    public Point3D(double a, double b, double c) {
+        x = a;
+        y = b;
+        c = z;
+    }
+    // Additional methods, for example, getters, toString(), and so on
+}
+#+END_SRC
+
+相应的 HotSpot 中内存布局如下。
+
+[[../static/190215172834.png][Array of point objects]]
+
+当处理这个 array 时，每个坐标对象都需要通过引用间接访问到，而对每个对象的访问都可能发生 cache miss，继而造成性能问题。
+
+对于关心性能的程序员，能够定义在内存中高效存储的数据非常重要。
+
+在本案中，object 的 identity 对于程序员来讲并不是太重要，因为该代码即没改变对象也没用到多态，用户也不太可能用到诸如锁等对 identity 敏感的特性。
+
+* Project Valhalla
+
+OpenJDK 之中一个叫做 Project Valhalla 的长期研究项目一直在探索 Java/JVM 的新方向。其宗旨是“一个探索和孵化先进 Java 虚拟机和语言特性的试验场”。它的主要目标之一便是“把 JVM 的内存布局统一于当代硬件的 cost model”(?)。
+
+从程序员的视角看，Valhalla 的最重要的特点之一便是其为 Java 生态系统新类型值的诞生地，即 value types。这是一种轻量的、不可变的、无身份的类型。Brian Goetz(Java 语言的架构师)如此描述典型用户将如何使用 value types：编码像个普通类，运行起来是个Int (codes like a class, works like an int)。
+
+value types 的潜在用例包括数字类型、tuples(heterogeneous list)、及更高阶的可能性(如代数类型)。现有类型也有可能被改造以 value types 存储。比如 Optional、LocalDate 和 lambda expressions，如果可行的话，都是被改造的对象。
+
+移除对 object identity 的管理是的以下优化成为可能：
+- 去除 object header 的开销
+- 直接在类字段或 array 中储存新的 value type，而不是通过引用间接储存对象
+- 减少垃圾回收器中的内存占用(?)
+
+如果该类型的值能在Jvm 上实现，并应用于上述的空间点类型，那么彼时其内存将被更高效的使用，因为如下所示，所有数据都不通过引用直接储存，cache miss 也因此得以避免。这种排布即实现了类似 C 中的结构体组成的 array，而且避免了底层操作可能带来的危险。
+
+[[../static/190215173007.png][Possible future memory layout]]
+
+尽管 value types 的初始目标看似简单，其波及范围远不止于此。Project Valhalla 想要成功，必须考虑 value types 作为第三种类型，其对当前范型方案不可避免造成影响。
+
+要把 value types 引入 Java，其能否应用于范型的问题自然浮出水面。比如能否作为 type parameter 的值。答案是，value types 设计伊始便假定其会成为改进后范型 type parameter 合法的值。
+
+这是个高深的问题且尚未得到解答。Oracle 倒是出了一个名为 LWorld 1(LW1) 的当前原型的预览版。用它代替了稍早的 Minimal Value Types(MVT) 原型。
+
+当前 LW1 原型可以正常运行，但尚处于很早的阶段，其目标用户为高阶开发者、库作者和工具开发者。
+
+我的下篇文章将会分析 LW1 和 LW2(LW1的下一代)。届时将对其生成的字节码和其如何增强即将到来的 Java/JVM 版本进行深入研究。

@@ -1,0 +1,24 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use v5.18;
+
+# use List::Util Q(reduce);
+
+my @posts = glob "posts/*.org";
+my %used_pics;
+
+foreach my $post (@posts) {
+    open (my $fh, '<:encoding(UTF-8)', $post) or die "Could not open file '$post' $!";
+    while (my $row = <$fh>) {
+        if ($row =~ /(static\/\d{12}\.(png|jpg))/) {
+            $used_pics{$1} = 1;
+        }
+    }
+}
+
+my @pics = glob "static/*.png static/*.jpg";
+foreach my $pic (@pics) {
+    say $pic unless $used_pics{$pic};
+}
