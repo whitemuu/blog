@@ -7,12 +7,12 @@
 
 术语 strong 和 weak 其实相当模糊，如下是其可能的含义：
 
-- 有时，strong 表示 static，这很明了，但最好还是使用 static 毕竟我们对 static 没有歧义；
+- 有时，strong 表示 static，这很明了，但最好还是使用 static，毕竟 static 不存在歧义；
 - 有时，strong 表示“值类型之间不可隐式转换”。比如js允许 ="a" - 1= ，我们称此为 "weak typing"。但几乎所有语言都提供不同程度的隐式转换，像 =1 - 1.1= 这样的整形到浮点数的转换。实际上多数如此理解 strong/weak typing 的人对于如何界定“何种程度的隐式转换才能算作 strong typing”并不能达成一致;
 - 有时，strong 意味着不允许逾越语言的类型规则(type rules);
 - 有时，strong 表示内存安全(memory-safe)，C是个典型的 memory-unsafe 的语言。举个例子，如 =xs= 是有4个值的 array，C允许代码如此索引 =xs[1000]= ，即所有内存范围的的值都可作为合法索引。
 
-为了简洁就先到这儿。如下是一些语言对应每个含义所属的阵营。可见，唯独Haskell在任何意义上都是 strong 的，其他语言都或多或少的'混乱'。
+至此不再赘述。如下是一些语言对应每个含义所属的阵营。可见，唯独Haskell在任何意义上都是 strong 的，其他语言都或多或少的'混乱'。
 
 | Language   | Static? | Implicit Conversions? | Rules Enforced? | Memory-Safe? |
 |------------+---------+-----------------------+-----------------+--------------|
@@ -24,7 +24,7 @@
 # |------------+---------+-----------------------+-----------------+--------------|
 # | Perl       | Weak    | Weak                  |                 | Strong       |
 
-(* "implicit Conversions?"列的“Depends”意思是其其强弱取决于阁下的标准)
+(* =implicit Conversions?= 列的 Depends 意思是其其强弱取决于阁下的标准)
 
 通常，术语 strong/weak 指的是上面提到的和没提到的各种含义的不明确组合。这些混淆使得 strong/weak 这种描述方式实际上失去了意义。每当阁下想使用它们来描述语言特性的时候，建议还是用更具体的描述来表达。比如我们可以如此讲“当我们去加一个 string 和 integer 时，Javascript 会返回一个值，而 python 则会抛出一个 error”。如此，我们就不必费心去一步步讨论 strong 的种种含义，甚至更糟的是，表面言语上达成了共识或分歧，脑袋里想的却是不同的东西。
 

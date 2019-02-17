@@ -162,7 +162,7 @@ YY/mm/dd/HH
 #+BEGIN_SRC js
 let date = '18123017' // 2018-12-30T17:00:00
 date = encodeDate(date)
-console.log(date) // 41N5
+console.log(date) // 41MH
 date = decodeDate(date)
 console.log(date) // 18123017
 

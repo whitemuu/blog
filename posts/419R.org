@@ -1,0 +1,134 @@
+#+TITLE: asymptotic analysis of Algorithms
+#+AUTHOR: angus zhang
+#+DATE: 2018-12-11T14:06:15CST
+#+OPTIONS: \n:t
+#+TAGS: asymptotic algorithm big-O
+
+* 目的
+
+将算法性能(复杂度)粗略的分类，以提供评判取用的标准。
+
+而分析算法性能，只有在数据量足够大时才有意义，所以天然地，用数学上的 *极限分析* 作为分析算法的工具非常合适。
+
+*本文默认为描述时间复杂度，空间复杂度道理相通。
+
+* Bachmann–Landau notations
+
+Bachmann–Landau notations，或称为 asymptotic notations 是一组由 Paul Bachmann, Edmund Landau 等人发明的用集合来描述函数极限行为的表示法。
+
+** Θ(g(x)) | big Theta notation
+
+集合 Θ(g(x)) 定义如下：
+#+BEGIN_EXAMPLE
+Θ(g(x)) = {f(x) | there exist positive constants c1, c2, n such that 0<=c1*g(x)<=f(x)<=c2*g(x) for all x > n}
+#+END_EXAMPLE
+
+The Big-Theta notation is symmetric: f(x) = Θ(g(x)) <=> g(x) = Θ(f(x))
+
+we could write f(x) ∈ Θ(g(x))
+but more commonly f(x) = Θ(g(x))
+** big O natation
+
+upper bound
+
+we use big-Oh to describe both time complexity(mostly) and space complexity
+
+for the *purposes* of separating algorithms in large speed classes, Big-O is enough
+
+Multiplying a function by a constant only influences its growth rate by a
+constant amount, so linear functions still grow linearly, logarithmic functions
+still grow logarithmically, exponential functions still grow exponentially, etc.
+Since these categories aren't affected by constants, it doesn't matter that we
+drop the constants.
+[[https://stackoverflow.com/questions/22188851/why-is-constant-always-dropped-from-big-o-analysis][algorithm - Why is constant always dropped from big O analysis? - Stack Overflow]]
+
+suppress constant factors(system dependent) and lower-order terms(irrelevant for large input)
+([[https://stackoverflow.com/questions/22614585/what-is-constant-factors-and-low-order-term-in-algorithms][big o - What is constant factors and low-order term in algorithms? - Stack Overflow]])
+6nlog₂n + 6n => nlog₂n[big-oh of n log n]
+
+
+If there is two array as parameter, say, m and n, the big-O notation may be sth like O(max(m,n))
+
+=原操作=的次数作为时间度量
+执行时间T和输入规模n
+T(n) = O( f(n) ) -- 随着问题规模n的增大，算法执行时间的增长率和f(n)的增长率相同，乘坐算法的渐进时间复杂度
+数据顺序等因素可能造成代码中的分支行为，按=worst-case=计算
+
+If T1(N) = O(f(N)) and T2(N) = O(g(N)), then
+1) T1(N) + T2(N) = O(f(N) + g(N)) (intuitively and less formally it is O(max(f(N), g(N))) ),
+2) T1(N) * T2(N) = O(f(N) * g(N))
+
+If T(N) is a polynomial of degree k, then T(N) = Θ(N^k )
+
+log^k(N) = O(N) for any constant k. This tells us that logarithms grow very slowly.
+** Little o notation
+** Big Omega notation
+** Little omega notation
+** 关系
+
+用 Venn's diagram 表示它们之间的关系是
+#+BEGIN_EXAMPLE
+┌──────────────────────┐
+│   O(g(n))    ┌───────┼──────────────┐
+│              │       │   Ω(g(n))    │
+│  ┌─────────┐ │       │              │
+│  │ o(g(n)) │ │Θ(g(n))│ ┌─────────┐  │
+│  └─────────┘ │       │ │ ω(g(n)) │  │
+└──────────────┼───────┘ └─────────┘  │
+               └──────────────────────┘
+#+END_EXAMPLE
+
+** why drop non-dominant terms
+O(n^2) <= O(n + n^2) <= O(n^2 + n^2)
+* 算法
+
+| Name         | Notation |    n=10 |         n=100 | example           |
+|--------------+----------+---------+---------------+-------------------|
+| Constant     | 1        |       1 |             1 | x + y             |
+| Logarithmic  | logN     |       3 |             7 | binary search     |
+| Linear       | N        |      10 |           100 | loop              |
+| Linearithmic | NlogN    |      30 |           700 | merge/quick sort  |
+| Quadratic    | N^2      |     100 |         10000 | nested loop       |
+| Cubic        | N^3      |    1000 |       1000000 | triple loop       |
+| Exponential  | 2^n      |    1024 |  1.267650e+30 | check all subsets |
+| Factorial    | n!       | 3628800 | 9.332622e+157 |                   |
+** O(1)
+
+典型的如 hash 查找。
+** O(logN)
+
+比如 binary-search，它是这么一种问题:
+每一次循环操作(或者递归)，干掉 input 的一半(i.e. input每增加一倍，运行的次数只需+1)
+
+*** 那么其中 logN 的底数是 2 ？
+
+可以是但不应是
+
+可以是是因为 base 是多少都没差，因为 O(logaN) 等价于 O(logbN)，毕竟
+#+BEGIN_EXAMPLE
+loga(N) = logb(N) / logb(a)
+#+END_EXAMPLE
+而(1 / logb(a))不过是个常数
+
+但O(logN) 问题不值局限于一次干掉 input 一半的算法，比如三分查找(对不起暂且我举不出别的例子只能强行)，
+是log3(N)。所以最好不要强调底数，直接用logN表示。
+** O(N)
+
+典型的如线性查找。
+** O(N^2)
+
+典型的如一层嵌套的循环多是此复杂度，具体如 xx排序。
+** O(N^3)
+** O(2^N)
+
+不知阁下有没有听过 *棋盘上的米粒* 的故事。其中 N 就是国际象棋的格子数，64个格子就能让国王抵赖可见到这个复杂度的算法是相当恐怖的了。
+
+
+** O(N!)
+
+whoops-a-daisy, that's rare.
+* ref
+
+1) [[https://en.wikipedia.org/wiki/Asymptotic_analysis][Asymptotic analysis - Wikipedia]]
+2) [[https://www.khanacademy.org/computing/computer-science/algorithms/asymptotic-notation/a/asymptotic-notation][Asymptotic notation (article) | Algorithms | Khan Academy]]
+3) [[https://learnxinyminutes.com/docs/asymptotic-notation/][Learn X in Y Minutes: Scenic Programming Language Tours]]
