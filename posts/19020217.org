@@ -11,7 +11,7 @@ RSS 当下存在两派标准， =RSS系= 和 =atom= 。
 
 * RSS
 
-** TODO History
+** History
 
 - 1997 - Dave Winer at UserLand develops scriptingNews. RSS was born
 - 1999 - Netscape develops RSS 0.90 (which supported scriptingNews)
@@ -25,32 +25,34 @@ RSS 当下存在两派标准， =RSS系= 和 =atom= 。
 - 2002 - Dave Winer develops RSS 2.0 after leaving UserLand
 - 2003 - The official RSS 2.0 specification is released
 
+origin: [[https://www.w3schools.com/xml/xml_rss.asp][XML RSS - w3schools]]
+
 ** Format(2.0)
 
 [[http://www.rssboard.org/rss-specification][RSS 2.0 Specification (version 2.0.11)]]
 
 <channel> 子标签：
 - Required:
-  - <title> :: name of channel
-  - <link> :: website URL
+  - <title> : name of channel
+  - <link> : website URL
 - Optional:
-  - <language> :: 所用语言
-  - <copyright> ::
-  - <pubDate> :: 该 RSS 文件发布时间，格式遵循 RFC 3339 (Wed, 02 Oct 2002 08:00:00 EST)
-  - <category> ::
-  - ... ::
+  - <language> : 所用语言
+  - <copyright>
+  - <pubDate> : 该 RSS 文件发布时间，格式遵循 RFC 3339 (Wed, 02 Oct 2002 08:00:00 EST)
+  - <category>
+  - ...
 
-<item> 子标签(<title> 和 <description> 至少包含一项，其它都是可选的)：
-- <title> :: 条目标题
-- <link> :: URL
-- <description> :: 可以是内容摘要，良心的 RSS 会提供全文
-- <author> ::
-- <comments> :: 所对应的评论页
-- <guid> ::
-- <pubDate> :: 条目发布时间
-- ... :: 
+<item> 子标签 (<title> 和 <description> 至少包含一项，其它都是可选的)：
+- <title> : 条目标题
+- <link> : URL
+- <description> : 可以是内容摘要，良心的 RSS 会提供全文
+- <author>
+- <comments> : 所对应的评论页
+- <guid>
+- <pubDate> : 条目发布时间
+- ...
 
-sample (from: [[http://www.rssboard.org/files/sample-rss-2.xml][www.rssboard.org/files/sample-rss-2.xml]]):
+sample ([[http://www.rssboard.org/files/sample-rss-2.xml][www.rssboard.org/files/sample-rss-2.xml]]):
 #+BEGIN_SRC xml file:www.rssboard.org/files/sample-rss-2.xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
@@ -65,39 +67,46 @@ sample (from: [[http://www.rssboard.org/files/sample-rss-2.xml][www.rssboard.org
         <generator>Weblog Editor 2.0</generator>
         <managingEditor>editor@example.com</managingEditor>
         <webMaster>webmaster@example.com</webMaster>
+
         <item>
             <title>Star City</title>
             <link>http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp</link>
             <description>
-                How do Americans get ready to work with Russians aboard the International Space Station? They take a crash course in culture, language and protocol at Russia's <a href="http://howe.iki.rssi.ru/GCTC/gctc_e.htm">Star City</a>.
+                How do Americans get ready to work with Russians aboard the International Space
+                Station? They take a crash course in culture, language and protocol at Russia's <a
+                href="http://howe.iki.rssi.ru/GCTC/gctc_e.htm">Star City</a>.
             </description>
             <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
             <guid>http://liftoff.msfc.nasa.gov/2003/06/03.html#item573</guid>
         </item>
+
         <item>
             <description>
-                Sky watchers in Europe, Asia, and parts of Alaska and Canada will experience a <a href="http://science.nasa.gov/headlines/y2003/30may_solareclipse.htm">partial eclipse of the Sun</a> on Saturday, May 31st.
+                Sky watchers in Europe, Asia, and parts of Alaska and Canada will experience a <a
+                href="http://science.nasa.gov/headlines/y2003/30may_solareclipse.htm">partial
+                eclipse of the Sun</a> on Saturday, May 31st.
             </description>
             <pubDate>Fri, 30 May 2003 11:06:42 GMT</pubDate>
             <guid>http://liftoff.msfc.nasa.gov/2003/05/30.html#item572</guid>
         </item>
         ...
+
     </channel>
 </rss>
 #+END_SRC
 * Atom 
 
-IETF [[https://tools.ietf.org/html/rfc4287][RFC-4287]]
-
-全称 Atom Syndication Format, 目的在于取代 RSS 标准。
+IETF [[https://tools.ietf.org/html/rfc4287][RFC-4287]] ，全称 Atom Syndication Format, 目的在于取代 RSS 标准。
 
 ** Format
+
+[[https://validator.w3.org/feed/docs/atom.html][Introduction to Atom]]
 
 <feed>子标签：
 - Required
   - <id> : 通常用网站URI
   - <title> : 通常为站点标题
-  - <updated> : feed 更新时间，格式遵循 RFC-3339(2002-10-02T15:00:00Z)
+  - <updated> : feed 更新时间，格式遵循 RFC-3339 (eg: 2002-10-02T15:00:00Z)
 - Recommended
   - <author>
   - <link>
@@ -181,11 +190,10 @@ sample:
 推荐月光博客九年前的博文：[[https://www.williamlong.info/archives/2381.html][RSS阅读时代的没落-月光博客]]
 * ref
 
-1. [[http://nullprogram.com/blog/2013/09/23/][Atom vs. RSS « null program]]
+1. [[https://en.wikipedia.org/wiki/RSS][RSS - Wikipedia]]
 2. [[https://en.wikipedia.org/wiki/Atom_(Web_standard)][Atom (Web standard) - Wikipedia]]
-3. [[https://validator.w3.org/feed/docs/atom.html][Introduction to Atom]]
-4. [[https://www.w3schools.com/xml/xml_rss.asp][w3schools::XML RSS]]
-5. [[https://www.petefreitag.com/item/384.cfm][How to add RSS Autodiscovery to your site]]
-6. [[https://github.com/jekyll/jekyll-feed/issues/2][What feed format is best? · Issue #2 · jekyll/jekyll-feed]]
-7. [[http://www.williamlong.info/cat/?tags=Rss][tags::Rss-月光博客]]
-8. [[https://developer.mozilla.org/en-US/docs/Archive/RSS/Getting_Started/What_is_RSS][What is RSS - Archive of obsolete content | MDN]]
+3. [[http://nullprogram.com/blog/2013/09/23/][Atom vs. RSS « null program]]
+4. [[https://www.petefreitag.com/item/384.cfm][How to add RSS Autodiscovery to your site]]
+5. [[https://github.com/jekyll/jekyll-feed/issues/2][What feed format is best? · Issue #2 · jekyll/jekyll-feed]]
+6. [[http://www.williamlong.info/cat/?tags=Rss][tags::Rss-月光博客]]
+7. [[https://developer.mozilla.org/en-US/docs/Archive/RSS/Getting_Started/What_is_RSS][What is RSS - Archive of obsolete content | MDN]]
