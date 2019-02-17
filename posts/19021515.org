@@ -1,7 +1,7 @@
 #+TITLE: [译] Java 值类型要来了吗？
 #+AUTHOR: angus zhang
 #+DATE: 2019-02-15T15:17:11CST
-#+TAGS: java jvm datatype
+#+TAGS: java pl jvm datatype
 
 subtitle: How Project Valhalla will simplify access to many Java objects.
 
@@ -13,7 +13,7 @@ origin: [[http://www.javamagazine.mozaicreader.com/NovemberDecember2018/twitter#
 
 * Current Types of Values
 
-自 Java 1.0 起，虚拟机只支持两种数据类型：基本数据类型(Primitive types)和引用数据类型(object references)。基本数据类型(int double..) 直接储存，不需额外的元信息。引用数据类型则是指向 Java 堆(heap)中一段内存的指针，该段内存有虚拟机通过垃圾回收(GC)单独管理。
+自 Java 1.0 起，虚拟机只支持两种数据类型：基本数据类型(Primitive types)和引用数据类型(object references)。基本数据类型(int double..) 直接储存，不需额外的元信息。引用数据类型则是指向 Java 堆(heap)中一段内存的指针，该段内存由虚拟机通过垃圾回收(GC)单独管理。
 
 换句话说，Java 运行环境故意不提供底层的对内存的控制。具体地讲，这意味着 Java 不具备类似 C 中结构体的设施，任何复合数据类型都仅能通过引用访问。
 
@@ -90,4 +90,4 @@ value types 的潜在用例包括数字类型、tuples(heterogeneous list)、及
 
 当前 LW1 原型可以正常运行，但尚处于很早的阶段，其目标用户为高阶开发者、库作者和工具开发者。
 
-我的下篇文章将会分析 LW1 和 LW2(LW1的下一代)。届时将对其生成的字节码和其如何增强即将到来的 Java/JVM 版本进行深入研究。
+下篇文章我将探索 LW1 和 LW2(LW1的下一代)。届时会研究其生成的字节码，以及它是如何提升即将到来的 Java/JVM 版本的。

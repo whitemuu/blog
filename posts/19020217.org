@@ -95,9 +95,9 @@ IETF [[https://tools.ietf.org/html/rfc4287][RFC-4287]]
 
 <feed>子标签：
 - Required
-  - <id> :: 通常用网站URI
-  - <title :: 通常为站点标题
-  - <updated> :: feed 更新时间，格式遵循 RFC-3339(2002-10-02T15:00:00Z)
+  - <id> : 通常用网站URI
+  - <title> : 通常为站点标题
+  - <updated> : feed 更新时间，格式遵循 RFC-3339(2002-10-02T15:00:00Z)
 - Recommended
   - <author>
   - <link>
