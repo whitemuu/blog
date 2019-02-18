@@ -9,7 +9,7 @@ origin: [[http://www.javamagazine.mozaicreader.com/NovemberDecember2018/twitter#
 
 本文将介绍 value types，一个潜在的 java/JVM 新特性。这个变化深远到可能影响 java 平台的方方面面 － 从性能到范型，甚至 Java 底层存储数据的方式。
 
-在理解什么是 value types，以及它讲如何改变你编程的方式之前，你需要了解到 java 11 为止 Java 是如何存储数据的。通过观察这个变化所涉及的方面和你使用 Java 方式的改变方便你把 value types 放在大背景中考察。
+在理解什么是 value types，以及它将如何改变你编程的方式之前，你需要了解到 java 11 为止 Java 是如何存储数据的。通过观察这个变化所涉及的方面和你使用 Java 方式的改变方便你把 value types 放在大背景中考察。
 
 * Current Types of Values
 

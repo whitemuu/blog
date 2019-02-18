@@ -133,10 +133,7 @@ online tool:
 [[https://onlinepngtools.com/convert-png-to-base64][Convert PNG to Base64 - Online PNG Tools]]
 ** 作为安全的文本储存
 
-比如github api
-#+BEGIN_EXAMPLE
-https://api.github.com/repos/whitemuu/blog/contents/posts/19012415.org
-#+END_EXAMPLE
+比如github api: [[https://api.github.com/repos/whitemuu/blog/contents/posts/432U.org][432U]]
 
 content字段即经过base64编码，因为其使用有限个字符，不会出现 ~'~ ~"~ 等字符干扰json格式。
 ** Base64URL

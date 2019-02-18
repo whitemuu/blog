@@ -2,5 +2,6 @@
 ;;; For more information see (info "(emacs) Directory Variables")
 
 ((org-mode
+  (fill-column . 80)
   (eval . (nichijou/posts-buffer-local-mode))))
 

@@ -25,7 +25,7 @@ RSS 当下存在两派标准， =RSS系= 和 =atom= 。
 - 2002 - Dave Winer develops RSS 2.0 after leaving UserLand
 - 2003 - The official RSS 2.0 specification is released
 
-origin: [[https://www.w3schools.com/xml/xml_rss.asp][XML RSS - w3schools]]
+source: [[https://www.w3schools.com/xml/xml_rss.asp][XML RSS - w3schools]]
 
 ** Format(2.0)
 

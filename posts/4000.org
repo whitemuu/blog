@@ -1,0 +1,170 @@
+#+TITLE: Demo
+#+AUTHOR: angus zhang
+#+DATE: 2018-10-04T16:51:58CST
+#+TAGS:
+
+这是一篇 org-mode 渲染及 CSS 样式测试文本。
+
+* 山居秋暝
+
+空山新雨後，天氣晚來秋。\\
+明月松間照，清泉石上流。\\
+竹喧歸浣女，蓮動下漁舟。\\
+隨意春芳歇，王孫自可留。\\
+
+** TODO =\\= or =#+OPTIONS: \n: t=
+
+段落中换行(<br/>)有两种解决方案。因为文本中有大量使用 =fill-paragraph= ，解析时
+其 =\n= 都需移除，所以 =\\= 方案较合适。
+
+* TODO 中文强调
+
+org-mode 为英文而生，所以 emphasis in =English= looks fine。但是中文的 =强调= 必
+须两边加 /空格/ 才能正确解析，最后看起来很奇怪，这不是 org-parser 的问题，在
+org-mode 中也是如此。
+
+* Internal Links
+
+[[./41LP.org][41LP]]
+
+** TODO section jump
+
+[[./41LP.org::Domain][41LP::Domain]]
+
+* Raw <pre>
+
+#+BEGIN_EXAMPLE
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒                          
+▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒      ▒▒          ▒▒      
+▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒        ▒▒      ▒▒        
+▒▒▒▒▒▒              ▒▒▒▒▒▒      ▒▒▒▒▒▒▒▒▒▒▒▒▒▒      
+▒▒▒▒    ▒▒      ▒▒    ▒▒▒▒    ▒▒▒▒  ▒▒▒▒▒▒  ▒▒▒▒    
+▒▒                      ▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  
+▒▒  ▒▒              ▒▒  ▒▒  ▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒  
+▒▒  ▒▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒  ▒▒  ▒▒  ▒▒          ▒▒  ▒▒  
+▒▒▒▒▒▒▒▒    ▒▒    ▒▒▒▒▒▒▒▒        ▒▒▒▒  ▒▒▒▒        
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒                          
+                          ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+      ▒▒          ▒▒      ▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒
+        ▒▒      ▒▒        ▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒
+      ▒▒▒▒▒▒▒▒▒▒▒▒▒▒      ▒▒▒▒▒▒              ▒▒▒▒▒▒
+    ▒▒▒▒  ▒▒▒▒▒▒  ▒▒▒▒    ▒▒▒▒    ▒▒      ▒▒    ▒▒▒▒
+  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒                      ▒▒
+  ▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒  ▒▒  ▒▒              ▒▒  ▒▒
+  ▒▒  ▒▒          ▒▒  ▒▒  ▒▒  ▒▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒  ▒▒
+        ▒▒▒▒  ▒▒▒▒        ▒▒▒▒▒▒▒▒    ▒▒    ▒▒▒▒▒▒▒▒
+                          ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+#+END_EXAMPLE
+
+
+#+BEGIN_EXAMPLE
+     ┌─┐          ┌─┐
+     └─┼─┐      ┌─┼─┘    
+     ┌─┘ └──────┘ └─┐
+   ┌─┘ ┌─┐      ┌─┐ └─┐
+ ┌─┘   └─┘      └─┘   └─┐
+ │ ┌─┐              ┌─┐ │
+ │ │ │ ┌──────────┐ │ │ │
+ └─┘ └─┼───┐  ┌───┼─┘ └─┘
+       └───┘  └───┘
+ #+END_EXAMPLE
+
+* The Dandy Frightening the Squatter
+
+About thirteen years ago, when the now flourishing young city of Hannibal, on
+the Mississippi River, was but a "wood-yard," surrounded by a few huts,
+belonging to some hardy "squatters," and such a thing as a steamboat was
+considered quite a sight, the following incident occurred:
+
+A tall, brawny woodsman stood leaning against a tree which stood upon the bank
+of the river, gazing at some approaching object, which our readers would easily
+have discovered to be a steamboat.
+
+About half an hour elapsed, and the boat was moored, and the hands busily
+engaged in taking on wood.
+
+Now among the many passengers on this boat, both male and female, was a spruce
+young dandy, with a killing moustache, &c., who seemed bent on making an
+impression upon the hearts of the young ladies on board, and to do this, he
+thought he must perform some heroic deed. Observing our squatter friend, he
+imagined this to be a fine opportunity to bring himself into notice; so,
+stepping into the cabin, he said:
+
+"Ladies, if you wish to enjoy a good laugh, step out on the guards. I intend to
+frighten that gentleman into fits who stands on the bank."
+
+The ladies complied with the request, and our dandy drew from his bosom a
+formidable looking bowie-knife, and thrust it into his belt; then, taking a
+large horse-pistol in each hand, he seemed satisfied that all was right. Thus
+equipped, he strode on shore, with an air which seemed to say "The hopes of a
+nation depend on me." Marching up to the woodsman, he exclaimed:
+
+"Found you at last, have I? You are the very man I've been looking for these
+three weeks! Say your prayers!" he continued, presenting his pistols, "you'll
+make a capital barn door, and I shall drill the key-hole myself!"
+
+The squatter calmly surveyed him a moment, and then, drawing back a step, he
+planted his huge fist directly between the eyes of his astonished antagonist,
+who, in a moment, was floundering in the turbid waters of the Mississippi.
+
+Every passenger on the boat had by this time collected on the guards, and the
+shout that now went up from the crowd speedily restored the crest-fallen hero to
+his senses, and, as he was sneaking off towards the boat, was thus accosted by
+his conqueror:
+
+"I say, yeou, next time yeou come around drillin' key-holes, don't forget yer
+old acquaintances!"
+
+The ladies unanimously voted the knife and pistols to the victor.
+
+* TODO 日本語
+
+collision: 英文 parse 时 =\n= 换成空格，而中日文则需移除 =\n=
+
+solution: 修改 parser 解决。如果 =\n= 前后字符为中日字符或标点，移除 =\n= ，否则
+将 =\n= 替换为空格。
+
+親しき者半ば地下に在り、これはもう事実である。こんな年齢にあると、しかし過去はも
+う私自身にとつて肩の上に負担の軽い荷物のやうで、私といふ旅人はただおほ方昨日今日
+の雑事茶飯事に気をとられて路を急いでゐる。薄暮の客にまづ近い。回顧も追憶も情趣の
+上で追々興味の乏しいものとなるのを覚えるのである。いはば視力が衰へるのであらう。
+私は近頃強度の老眼になやまされて読書に不自由を覚えてゐるが、精神的にはそれとは逆
+に追々近視的傾向に進んでゆくやうである。遠方の風景には模糊（もこ）たる霧がかかつ
+て見えるから、顧みて頓着することが稀れなのはいつそ身軽で気が楽である。ためにいく
+らか年頃厄介（やくかい）なセンチメンタリズムからは免がれえたかも知れぬ。やうやく
+こんな頃になつて、さうしてもしかすると知命といふことの一面がそんなところにあるか
+も知らぬと考へてみたりする。
+
+さて、このやうな薄暮の行路者がふりかへつて彼方に縹渺（へうべう）たる森の梢を顧み
+ようとするのである、といふのは、いや、話が大袈裟（おおげさ）である。とよりは、課
+題の「青春伝」は私はろくに話材らしいものもなくて恐縮である。乏しい才能と放埓（ほ
+うらつ）な暮しぶりと醜い失敗の積み重ねと、それらをひつくるめて要するに平凡なただ
+根気のいい貧乏生活といふ程度のことにしか当らないところの私の半生のその部分、これ
+に青春の名を冠しようとするのはいささか話が無理である。かう書いてきて私はこの簡単
+な言葉「青春」といふその二つの文字の美しさにしばらく見とれてゐる位のものである。
+なるほど、私にも人並の「青春」らしいものがあつてもよかつた筈である、とも考へてみ
+る、かう考へてみるのは当然口惜しい感慨をこめてでなければならない筈のところである
+が、さて実はさうでもない。殆んどそれほどの思ひを覚えもしないのは、何もここに来て
+味方を求める訳ではないが、当時私ども文学青年輩はみないづれも似たり寄つたり、仲間
+は大勢ゐたからであらう。
+
+小説家の外村繁君は当時はアナーキストを標榜してゐた。ある時酔つ払つて交番の前で
+（彼には若干芝居気があつたに違ひない）突然アナーキスト万歳！……と大声を張り上げた。
+深夜の街角でお巡りさんを揶揄（からか）ふ傾向のあつたのは何も彼一人のことではなか
+つたが、彼にもまたそれがあつた。もちろんお巡りさんにもそれ位のことは解るのでさつ
+そく悶着が持上つた。アナーキストの集会検束などしきりに新聞種になつてゐた時分のこ
+とである。いかさま小癪（こしやく）な振舞に見えたに違ひない。お巡りさんもむきにな
+つて外村を捕縛にかかつた。形勢は本格的に進行する気合に見えたから私は仲裁に入つた。
+私は外村の帽子をとつて、彼の帽子の孔（あな）から指を一本つき出して示しながら、
+
+――アナーキストなんですよ、こ奴（いつ）は、つまりこれなんですよ、アナーキスト万歳
+てのは、こ奴の……
+
+とでたらめの弁解にとりかかつたのは、いつかう仲裁の効果がなくて相手を揶揄ふことに
+於ては外村の尻馬に乗つた形になつた。
+
+後にこの晩の始末が話柄（わへい）になつたときさつそく萩原朔太郎先生から、
+
+――ぢや三好君はボロシェヴィストだね。
+
+と一本頂戴したのは、どうやらこの話にも目出たく落ちが出来たといふものであつた。
