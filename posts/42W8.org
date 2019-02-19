@@ -32,12 +32,13 @@ public class Foo<T> {
 ** type parameter 命名规范
 
 范型声明的参数一般用大写字母表示，并遵循以下命名实践：
-- E :: Element (used extensively by the Java Collections Framework)
-- K :: Key
-- V :: Value
-- N :: Number
-- T :: Type
-  - S,U,V etc. :: 2nd, 3rd, 4th Types
+- E for Element of Collections
+- K & V for Key and Value of a table
+- N for Number
+- T for Type
+  - S,U,V for 2nd, 3rd, 4th Types respectively
+
+for multiple characters [[https://stackoverflow.com/questions/2900881/generic-type-parameter-naming-convention-for-java-with-multiple-chars][Generic type parameter naming convention for Java (with multiple chars)? - Stack Overflow]]
 
 ** 静态方法
 

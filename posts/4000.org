@@ -1,7 +1,7 @@
 #+TITLE: Demo
 #+AUTHOR: angus zhang
 #+DATE: 2018-10-04T16:51:58CST
-#+TAGS:
+#+TAGS: org-mode org-js
 
 这是一篇 org-mode 渲染及 CSS 样式测试文本。
 
@@ -20,7 +20,7 @@
 * TODO 中文强调
 
 org-mode 为英文而生，所以 emphasis in *English* looks fine。但是中文的 *强调* 必
-须两边加 /空格/ 才能正确解析，最后看起来很奇怪，这不是 org-parser 的问题，在
+须两边加 /空格/ 才能正确解析，最后看起来很奇怪，这不是 org-js 的问题，在
 org-mode 中也是如此。
 
 * Internal Links
@@ -30,7 +30,7 @@ org-mode 中也是如此。
 
 ** TODO section jump
 
-[[./41LP.org::Domain][41LP::Domain]]
+[[./41LP.org::Domain][./41LP.org::Domain]]
 
 * Raw <pre>
 
