@@ -23,6 +23,15 @@ org-mode 为英文而生，所以 emphasis in *English* looks fine。但是中�
 须两边加 /空格/ 才能正确解析，最后看起来很奇怪，这不是 org-js 的问题，在
 org-mode 中也是如此。
 
+* LEVEL 1
+
+** LEVEL 2
+
+*** LEVEL 3
+
+**** LEVEL 4
+
+***** LEVEL 5
 * Internal Links
 
 1. [[./41LP.org][./41LP.org]]
