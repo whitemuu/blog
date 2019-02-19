@@ -1,6 +1,6 @@
 #+TITLE: 设置密钥登录 SSH
 #+AUTHOR: angus zhang
-#+DATE: 2019-01-27T00:07:52CST
+#+DATE: 2019-02-18T14:20:49CST
 #+TAGS: SSH cryptography how-to linux
 
 * 非对称加密
@@ -19,7 +19,7 @@ message ------> gibberish ------> message
 
 * 有这个必要吗？
 
-不只是方便。
+设置密钥登录的意义绝不仅仅是图登录免输入密码而已，更是为了安全。
 
 #+BEGIN_EXAMPLE
 Last failed login: Mon Jun  6 02:45:00 UTC 2016 from 116.31.116.50 on ssh:notty
@@ -28,7 +28,7 @@ Last login: Sat Jun  4 10:49:32 2016 from *.*.*.*
 -bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
 #+END_EXAMPLE
 
-这是我16年所使用的 vultr vps，经历了至少两次这样的暴力破解。我当然不是个例 [[https://serverfault.com/questions/244614/is-it-normal-to-get-hundreds-of-break-in-attempts-per-day][linux - Is it normal to get hundreds of break-in attempts per day? - Server Fault]]
+这是我 2016 年所使用的 Vultr VPS，经历了至少两次这样的暴力破解。当然我遇到的绝非个例 [[https://serverfault.com/questions/244614/is-it-normal-to-get-hundreds-of-break-in-attempts-per-day][linux - Is it normal to get hundreds of break-in attempts per day? - Server Fault]]
 
 事实上这还不是个坏消息，因为这说明了我的主机是安全的，如果真的破解成功的话，对方就不会让你看到这些东西了。
 * 步骤
@@ -64,7 +64,9 @@ $ ssh-copy-id {targethost}
 
 ** sshd 配置
 
-~/etc/ssh/sshd_config~
+当然配置好之后还要禁用密码登陆，否则密钥登录的意义就止于方便而已。sshd 配置文件
+是 ~/etc/ssh/sshd_config~
+
 #+BEGIN_EXAMPLE conf
 PubkeyAuthentication yes
 AuthorizedKeyFile  .ssh/authorized_keys
