@@ -36,7 +36,7 @@ org-mode 中也是如此。
 TEXT Text text
 TEXT Text text
 TEXT Text text
-* TODO special paragraph
+* TODO paragraph with special predefined class
 
 ** warning
 
@@ -46,6 +46,10 @@ This is a warning
 #+BEGIN_EXAMPLE
 #+ATTR_HTML: :class warning
 This is a warning
+
+#+begin_warning
+This is a warning
+#+end_warning
 #+END_EXAMPLE
 
 ** tip
@@ -53,10 +57,6 @@ This is a warning
 #+ATTR_HTML: :class tip
 This is a piece of tip.
 
-#+BEGIN_EXAMPLE
-#+ATTR_HTML: :class tip
-This is a piece of tip.
-#+END_EXAMPLE
 * Inline elements
 
 org-mode supports *bold*  /Italic/ +dashed+ =code= and SUB_{script}.
@@ -143,11 +143,11 @@ int main() {
 #+END_SRC
 * Quotation
 
-#+BEGIN_EXAMPLE
+#+BEGIN_QUOTE
 Don't Call Us, 
 We'll Call You.
 -- Nobody
-#+END_EXAMPLE
+#+END_QUOTE
 * List
 ** Unordered List
 ** Ordered List

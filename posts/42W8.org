@@ -130,7 +130,7 @@ foo2.setValue(new Object()); // OK
 ** Inheritance of Generic Class
 
 #+BEGIN_EXAMPLE
-Collection<String> <- List<String> <- ArrayList<String>
+Collection<String>  <-  List<String>  <-  ArrayList<String>
 #+END_EXAMPLE
 
 *** is Foo<integer> subtype of Foo<Number> ?
