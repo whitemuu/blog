@@ -3,7 +3,7 @@
 #+DATE: 2019-02-25T16:06:12CST
 #+TAGS: pl java javascript ecmascript
 
-JS 由于没有静态类型，对于一个 try block 可能发生的错误只能在 catch 内部做 if 判断。
+JS 由于没有静态类型，对于一个 try block 可能发生的错误要分别处理只能在 catch 内部做 if 判断。
 
 #+BEGIN_SRC js
   try {
@@ -27,7 +27,7 @@ new Error("Hey, my fellow friend, I'm gona tell you what's happening in great de
 
 那就叫天天不应，叫地地不灵了。
 
-所以想要精确处理错误只能:
+所以想要具体地处理错误只能:
 
 #+BEGIN_SRC js
   try {
@@ -67,6 +67,6 @@ Jesus 😖
   }
 #+END_SRC
 
-问题是很难清楚哪个 handler 对应哪个 expression，可读性并不好。尽管可以借助IDE，终究是个 indirection。
+其问题是很难清楚哪个 handler 对应哪个 expression，可读性并不好。尽管可以借助IDE，终究是个 indirection。
 
 sigh, 世间竟无完美的解决方案咩？不知其它语言有无良策。

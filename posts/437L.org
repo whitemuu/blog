@@ -170,7 +170,7 @@ sample:
 <!-- RSS -->
 <link rel="alternate" type="application/rss+xml" title="RSS Feed for petefreitag.com" href="/rss/" />
 <!-- Atom -->
-<link href="atom.xml" type="application/atom+xml" rel="alternate" title="Sitewide Atom feed" />
+<link rel="alternate" type="application/atom+xml" title="Sitewide Atom feed" href="atom.xml" />
 #+END_SRC
 
 这种标签可以使一些支持的软件自动识别出订阅链接比如 Safari
