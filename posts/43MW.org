@@ -1,0 +1,72 @@
+#+TITLE: 'try' to catch a typeless exception
+#+AUTHOR: angus zhang
+#+DATE: 2019-02-25T16:06:12CST
+#+TAGS: pl java javascript ecmascript
+
+JS 由于没有静态类型，对于一个 try block 可能发生的错误只能在 catch 内部做 if 判断。
+
+#+BEGIN_SRC js
+  try {
+    // foo bar baz
+  } catch (e) {
+    if (e instanceof SomePredefinedError) {
+      // blah this
+    } else if (e instanceof AnotherPredefinedError) {
+      // blah that
+    } else {
+      throw e
+    }
+  }
+#+END_SRC
+
+残念的是该实现并非Java那种语言规范级别的建议，所以如果某类库直接：
+
+#+BEGIN_SRC js
+new Error("Hey, my fellow friend, I'm gona tell you what's happening in great detail! de nada, blah blah")
+#+END_SRC
+
+那就叫天天不应，叫地地不灵了。
+
+所以想要精确处理错误只能:
+
+#+BEGIN_SRC js
+  try {
+    // foo
+    try {
+      // bar
+      try {
+        // baz
+      } catch (e) {
+        // handle baz
+      }
+    } catch (e) {
+      // handle bar
+    }
+  } catch (e) {
+    // handle foo
+  }
+#+END_SRC
+
+还要祈求调用的各个方法只能抛出一个错误。
+
+Jesus 😖
+
+* 对 java 的不满
+
+说回现在可能是标准的解决方案：
+
+#+BEGIN_SRC java
+  try {
+      // foo
+      // bar
+      // baz
+  } catch (HogeException e) {
+      // handle foo
+  } catch (FugaException e) {
+      // handle baz
+  }
+#+END_SRC
+
+问题是很难清楚哪个 handler 对应哪个 expression，可读性并不好。尽管可以借助IDE，终究是个 indirection。
+
+sigh, 世间竟无完美的解决方案咩？不知其它语言有无良策。
