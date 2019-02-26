@@ -1,22 +1,22 @@
 #+TITLE: 'try' to catch a typeless exception
 #+AUTHOR: angus zhang
 #+DATE: 2019-02-25T16:06:12CST
-#+TAGS: pl java javascript ecmascript
+#+TAGS: exception javascript ecmascript java pl
 
 JS 由于没有静态类型，对于一个 try block 可能发生的错误要分别处理只能在 catch 内部做 if 判断。
 
 #+BEGIN_SRC js
-  try {
-    // foo bar baz
-  } catch (e) {
-    if (e instanceof SomePredefinedError) {
-      // blah this
-    } else if (e instanceof AnotherPredefinedError) {
-      // blah that
-    } else {
-      throw e
-    }
+try {
+  // foo bar baz
+} catch (e) {
+  if (e instanceof SomePredefinedError) {
+    // blah this
+  } else if (e instanceof AnotherPredefinedError) {
+    // blah that
+  } else {
+    throw e
   }
+}
 #+END_SRC
 
 残念的是该实现并非Java那种语言规范级别的建议，所以如果某类库直接：
@@ -30,21 +30,21 @@ new Error("Hey, my fellow friend, I'm gona tell you what's happening in great de
 所以想要具体地处理错误只能:
 
 #+BEGIN_SRC js
+try {
+  // foo
   try {
-    // foo
+    // bar
     try {
-      // bar
-      try {
-        // baz
-      } catch (e) {
-        // handle baz
-      }
+      // baz
     } catch (e) {
-      // handle bar
+      // handle baz
     }
   } catch (e) {
-    // handle foo
+    // handle bar
   }
+} catch (e) {
+  // handle foo
+}
 #+END_SRC
 
 还要祈求调用的各个方法只能抛出一个错误。
@@ -56,15 +56,15 @@ Jesus 😖
 说回现在可能是标准的解决方案：
 
 #+BEGIN_SRC java
-  try {
-      // foo
-      // bar
-      // baz
-  } catch (HogeException e) {
-      // handle foo
-  } catch (FugaException e) {
-      // handle baz
-  }
+try {
+    // foo
+    // bar
+    // baz
+} catch (HogeException e) {
+    // handle foo
+} catch (FugaException e) {
+    // handle baz
+}
 #+END_SRC
 
 其问题是很难清楚哪个 handler 对应哪个 expression，可读性并不好。尽管可以借助IDE，终究是个 indirection。
