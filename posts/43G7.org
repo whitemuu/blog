@@ -1,4 +1,4 @@
-#+TITLE: [译] Java 值类型要来了吗？
+#+TITLE: [译] Value Types Are Coming to the JVM
 #+AUTHOR: angus zhang
 #+DATE: 2019-02-15T15:17:11CST
 #+TAGS: java pl jvm datatype

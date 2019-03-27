@@ -61,6 +61,12 @@ This is a piece of tip.
 
 org-mode supports *bold*  /Italic/ +dashed+ =code= and SUB_{script}.
 # TODO two SPC between bolds or italics
+
+press @@html:<kbd>M-x</kbd>@@ to call =helm-M-x=
+
+#+BEGIN_EXAMPLE
+@@html:<kbd>M-x</kbd>@@
+#+END_EXAMPLE
 * Tables
 
 standard:

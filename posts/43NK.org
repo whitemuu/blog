@@ -1,6 +1,6 @@
 #+TITLE: [转] Epigrams on Programming
 #+AUTHOR: Alan J. Perlis
-#+DATE: 1982-09-01T00:00:00CST
+#+DATE: 1982-09-XXT00:00:00CST
 #+TAGS: epigrams programming pl
 
 origin: [[https://cpsc.yale.edu/epigrams-programming][Epigrams in Programming | Computer Science]]

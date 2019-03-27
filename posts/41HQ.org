@@ -1,15 +1,33 @@
 #+TITLE: IEEE-754 in a nutshell
 #+AUTHOR: angus zhang
-#+DATE: 2018-12-23T14:14:27CST
+#+DATE: 2019-03-05T15:38:05CST
 #+TAGS: datatype CE IEEE in-a-nutshell
 
-* 十进制 ➡ 二进制
+* 进制转换
 
 我们熟悉十进制，而计算机只能储存二进制，所以必然存在互转的步骤。
 
+** 二进制 ➡ 十进制
+
+二进制转十进制比较简单，每个位的值乘以其权重，结果相加即可。
+
+#+BEGIN_EXAMPLE
+1 0 1 1.0 0 1 1
+│ │ │ │ │ │ │ └── 1 * 2^-4 = 0.0625
+│ │ │ │ │ │ └──── 1 * 2^-3 = 0.125
+│ │ │ │ │ └────── 0 * 2^-2 = 0
+│ │ │ │ └──────── 0 * 2^-2 = 0
+│ │ │ └────────── 1 * 2^0 = 1
+│ │ └──────────── 1 * 2^1  = 2
+│ └────────────── 0 * 2^2  = 0
+└──────────────── 1 * 2^3  = 8
+                           =11.1875
+#+END_EXAMPLE
+** 十进制 ➡ 二进制
+
 小数转二进制是依靠 =小数部分= 不断乘以2，保存每次的个位，直到小数部分刚好等于0，不过多数情况是永远也不能等于0的，啧啧。
 
-比如0.125
+比如 0.125
 #+BEGIN_EXAMPLE
       0.125  integer part
 x2    0.25       0
@@ -75,10 +93,27 @@ x2    1.72    0
 
 float 采用 excess-127 表示符号数([[https://en.wikipedia.org/wiki/Offset_binary][Offset binary - Wikipedia]])
 
-(?)即用 0~255 对应表示 -127~128
+即用 0~255 对应表示 -127~128，但 －127 和 128 保留它用，所以 exponent 的范围是
+-126~127。
 ** mantissa | 尾数
 
 多丢，少补 0，占满 23 或 52 个 bits
+** range
+
+| type   | smallest positive value       | range                                 | precision |
+|--------+-------------------------------+---------------------------------------+-----------|
+| float  | 1.00.. * 2^-126 ≈ 1.17549e-38 | ±1.11..1 * 2^127 ≈ 2 * 2^127 ≈ 3.4e38 | 6 digits  |
+| double | 2.22507e-308                  | ±1.79769e308                          | 15 digits |
+*** precision
+
+比较 int 和 float，在 java 或通常 64 位机的 C 中都是占 4 个 bytes，即它们所具有
+的表示都是2^32，何以 float 的 range 大 int 这么多？答案只能是其对范围内的整数也
+非都能精确表示的。那么其表示的整数间最大跨度有多大呢？这么大：
+
+#+BEGIN_EXAMPLE
+2^-23 * 2^127 = 2.02824096e31
+#+END_EXAMPLE
+
 ** 验证
 #+BEGIN_SRC java
 // 打印 10.16f 的内存表示
@@ -115,10 +150,13 @@ System.out.println(0.3f * 3); //0.90000004
 1. 在数据输入/输出阶段进行拦截，转化成整数进行计算和保存
 2. 使用专用类库API比如 Java/BigDecimal
 * ref
-- [[https://en.wikipedia.org/wiki/Signed_number_representations][Signed number representations - Wikipedia]]
-- [[https://en.wikipedia.org/wiki/Floating-point_arithmetic][Floating-point arithmetic - Wikipedia]]
-- [[https://en.wikipedia.org/wiki/IEEE_754][IEEE 754 - Wikipedia]]
-- [[https://en.wikipedia.org/wiki/Offset_binary][Offset binary - Wikipedia]]
-- 矢泽久雄 /程序是怎样跑起来的/
-- Herbert Schildt /Java the complete reference/
-- [[https://www.ibm.com/developerworks/library/j-math2/index.html][Java's new math, Part 2: Floating-point numbers]]
+
+1. [[https://en.wikipedia.org/wiki/Single-precision_floating-point_format][Single-precision floating-point format - Wikipedia]]
+2. [[https://en.wikipedia.org/wiki/Signed_number_representations][Signed number representations - Wikipedia]]
+3. [[https://en.wikipedia.org/wiki/Floating-point_arithmetic][Floating-point arithmetic - Wikipedia]]
+4. [[https://en.wikipedia.org/wiki/IEEE_754][IEEE 754 - Wikipedia]]
+5. [[https://en.wikipedia.org/wiki/Offset_binary][Offset binary - Wikipedia]]
+6. 矢泽久雄 /程序是怎样跑起来的/
+7. Herbert Schildt /Java the complete reference/
+8. [[https://www.ibm.com/developerworks/library/j-math2/index.html][Java's new math, Part 2: Floating-point numbers]]
+9. [[https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html][What Every Computer Scientist Should Know About Floating-Point Arithmetic]]
