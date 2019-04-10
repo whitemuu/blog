@@ -1,0 +1,227 @@
+#+TITLE: Bash scripting in a nutshell
+#+AUTHOR: angus zhang
+#+DATE: 2019-04-10T14:00:06CST
+#+TAGS: bash shell unix pl grammar
+
+* variable
+
+#+BEGIN_SRC sh
+NAME="John Doe"
+echo $NAME
+echo "$NAME"
+echo ${NAME}
+echo "${NAME}"
+echo '$NAME' # no expansion with single quotes
+#+END_SRC
+
+* Control Flow
+
+** if
+#+BEGIN_SRC sh
+if [[ -z "$string" ]]; then
+  echo "String is empty"
+elif [[ -n "$string" ]]; then
+  echo "String is not empty"
+fi
+#+END_SRC
+
+** conditions
+
+| ~[[ -z STRING ]]~        | Empty string             |
+| ~[[ -n STRING ]]~        | Not empty string         |
+| ~[[ STRING == STRING ]]~ | Equal                    |
+| ~[[ STRING != STRING ]]~ | Not Equal                |
+| ~[[ NUM -eq NUM ]]~      | Equal                    |
+| ~[[ NUM -ne NUM ]]~      | Not equal                |
+| ~[[ NUM -lt NUM ]]~      | Less than                |
+| ~[[ NUM -le NUM ]]~      | Less than or equal       |
+| ~[[ NUM -gt NUM ]]~      | Greater than             |
+| ~[[ NUM -ge NUM ]]~      | Greater than or equal    |
+| ~[[ STRING == STRING ]]~ | Regexp                   |
+| ~(( NUM < NUM ))~    | Numeric conditions       |
+| ~[[ -o noclobber ]]~     | If OPTIONNAME is enabled |
+| ~[[ ! EXPR ]]~           | Not                      |
+| ~[[ X ]] && [[ Y ]]~         | And                      |
+
+** File conditions
+
+| ~[[ -e FILE ]]~         | Exists                  |
+| ~[[ -r FILE ]]~         | Readable                |
+| ~[[ -h FILE ]]~         | Symlink                 |
+| ~[[ -d FILE ]]~         | Directory               |
+| ~[[ -w FILE ]]~         | Writable                |
+| ~[[ -s FILE ]]~         | Size is > 0 bytes       |
+| ~[[ -f FILE ]]~         | File                    |
+| ~[[ -x FILE ]]~         | Executable              |
+| ~[[ FILE1 -nt FILE2 ]]~ | 1 is more recent than 2 |
+| ~[[ FILE1 -ot FILE2 ]]~ | 2 is more recent than 1 |
+| ~[[ FILE1 -ef FILE2 ]]~ | Same files              |
+
+** Loops
+
+#+BEGIN_SRC sh
+# loop files
+for i in /etc/rc.*; do
+  echo $i
+done
+
+# loop lines
+< file.txt | while read line; do
+    echo $line
+done
+
+# C-like for loop
+for ((i = 0 ; i < 100 ; i++)); do
+    echo $i
+done
+
+# infinite loop
+while true; do
+    ···
+done
+
+# Ranges
+for i in {1..5}; do
+    echo "Welcome $i"
+done
+
+for i in {5..50..5}; do # With step size
+    echo "Welcome $i"
+done
+#+END_SRC
+* Functions
+
+#+BEGIN_SRC sh
+# Definition
+function myfunc() { # function keyword is optional
+    local surname=$1 middle=$2 last=$3 # local variables
+    # echo "$surname $middle $last"
+    return "$surname $middle $last"
+}
+
+# Usage
+myfunc "Ludwig Mies" "van der" "Rohe"
+
+# or capture with command substitution
+name=$(myfunc "Ludwig Mies" "van der" "Rohe")
+echo $name
+#+END_SRC
+
+** Arguments
+
+| `$#` | Number of arguments                |
+| `$*` | All arguments                      |
+| `$@` | All arguments, starting from first |
+| `$1` | First argument                     |
+| `$2` | Second argument                    |
+
+** get command line arguments
+
+same to function's argument except an additional =$0= referring to the executable's name.
+
+=foo.sh=:
+#+BEGIN_SRC sh
+echo $0
+echo $1
+echo $2
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+$ ./foo.sh aaa bbb
+foo.sh
+aaa
+bbb
+#+END_EXAMPLE
+** idiom to raise error
+
+#+BEGIN_SRC sh
+myfunc() {
+    return 1
+}
+
+if myfunc; then
+    echo "success"
+else
+    echo "failure"
+fi
+#+END_SRC
+
+* Arrays
+
+#+BEGIN_SRC sh
+# definition
+Fruits=('Apple' 'Banana' 'Orange')
+# or
+Fruits=()
+Fruits[0]="Apple"
+Fruits[1]="Banana"
+Fruits[2]="Orange"
+
+echo ${Fruits[0]}           # Element #0
+echo ${Fruits[@]}           # All elements, space-separated
+echo ${#Fruits[@]}          # Number of elements
+echo ${#Fruits}             # String length of the 1st element
+echo ${#Fruits[3]}          # String length of the Nth element
+echo ${Fruits[@]:1:2}       # Range (from position 3, length 2)
+
+# Operations
+Fruits=("${Fruits[@]}" "Watermelon")    # Push
+Fruits+=('Watermelon')                  # Also Push
+Fruits=( ${Fruits[@]/Ap*/} )            # Remove by regex match
+unset Fruits[2]                         # Remove one item
+Fruits=("${Fruits[@]}")                 # Duplicate
+Fruits=("${Fruits[@]}" "${Veggies[@]}") # Concatenate
+lines=(`cat "logfile"`)                 # Read from file
+
+# Iteration
+for i in "${arrayName[@]}"; do
+    echo $i
+done
+#+END_SRC
+
+* Dictionaries
+
+#+BEGIN_SRC sh
+declare -A sounds # A for associative array
+sounds[dog]="bark"
+sounds[cow]="moo"
+sounds[bird]="tweet"
+sounds[wolf]="howl"
+
+echo ${sounds[dog]} # Dog's sound
+echo ${sounds[@]}   # All values
+echo ${!sounds[@]}  # All keys
+echo ${#sounds[@]}  # Number of elements
+unset sounds[dog]   # Delete dog
+
+# Iteration
+# Iterate over values
+for val in "${sounds[@]}"; do
+    echo $val
+done
+# Iterate over keys
+for key in "${!sounds[@]}"; do
+    echo $key
+done
+#+END_SRC
+* Command Substitution
+
+#+BEGIN_SRC sh
+$( <COMMANDS> )
+
+` <COMMANDS> ` # obsolete for nesting reason
+#+END_SRC
+
+expands to <COMMANDS>'s ~stdout~ (executed in a subshell).
+
+All trailing newlines are removed.
+* refs
+
+1. [[https://devhints.io/bash#functions][Bash scripting cheatsheet]]
+2. [[http://cs.lmu.edu/~ray/notes/bash/][Introduction to Bash]]
+3. [[https://learnxinyminutes.com/docs/bash/][Learn X in Y Minutes: Scenic Programming Language Tours]]
+4. ~man bash~
+5. [[https://wiki.bash-hackers.org/syntax/expansion/cmdsubst][Command substitution {Bash Hackers Wiki}]]
+6. [[https://google.github.io/styleguide/shell.xml][Shell Style Guide]]
+7. [[https://github.com/icy/bash-coding-style][icy/bash-coding-style: A Bash coding style]]
+
