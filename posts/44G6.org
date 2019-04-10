@@ -5,7 +5,7 @@
 
 * variable
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC bash
 NAME="John Doe"
 echo $NAME
 echo "$NAME"
@@ -17,7 +17,7 @@ echo '$NAME' # no expansion with single quotes
 * Control Flow
 
 ** if
-#+BEGIN_SRC sh
+#+BEGIN_SRC bash
 if [[ -z "$string" ]]; then
   echo "String is empty"
 elif [[ -n "$string" ]]; then
@@ -59,7 +59,7 @@ fi
 
 ** Loops
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC bash
 # loop files
 for i in /etc/rc.*; do
   echo $i
@@ -91,7 +91,7 @@ done
 #+END_SRC
 * Functions
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC bash
 # Definition
 function myfunc() { # function keyword is optional
     local surname=$1 middle=$2 last=$3 # local variables
@@ -120,7 +120,7 @@ echo $name
 same to function's argument except an additional =$0= referring to the executable's name.
 
 =foo.sh=:
-#+BEGIN_SRC sh
+#+BEGIN_SRC bash
 echo $0
 echo $1
 echo $2
@@ -134,7 +134,7 @@ bbb
 #+END_EXAMPLE
 ** idiom to raise error
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC bash
 myfunc() {
     return 1
 }
@@ -148,7 +148,7 @@ fi
 
 * Arrays
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC bash
 # definition
 Fruits=('Apple' 'Banana' 'Orange')
 # or
@@ -181,7 +181,7 @@ done
 
 * Dictionaries
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC bash
 declare -A sounds # A for associative array
 sounds[dog]="bark"
 sounds[cow]="moo"
@@ -206,7 +206,7 @@ done
 #+END_SRC
 * Command Substitution
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC bash
 $( <COMMANDS> )
 
 ` <COMMANDS> ` # obsolete for nesting reason
