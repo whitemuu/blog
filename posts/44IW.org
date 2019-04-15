@@ -1,0 +1,118 @@
+#+TITLE: printf redux
+#+AUTHOR: angus zhang
+#+DATE: 2019-04-14T16:06:46CST
+#+TAGS: 
+
+* intro
+
+所有编程语言包括在内，向控制台输出的函数，生产环境未必常用，但在学习过程中却扮演
+不可或缺的角色。C 的 printf 就是如此，且足够复杂。觉得只要掌握基本使用就能蒙混过
+去，但实际中却一次一次跳出来折麽你，干脆一次弄清楚才好。
+
+一些特点：
+- printf 这种使用 template 的方法，相对于一段一段来拼接字符串，可读性要高
+- 但如果参数过多，难以辨清对应关系，则可读性比 [[https://en.wikipedia.org/wiki/String_interpolation][interpolation]] 要差
+- 提供了对 number 打印格式的精确控制，也是其复杂之处
+- 该函数影响深远，在很多编程语言都有继承
+
+* Conversion Specification
+
+#+BEGIN_EXAMPLE
+%[<flag>][min-width][.<precision>][<length-modifier>]<conversion-specifier>
+#+END_EXAMPLE
+
+** Flags
+
+| flag    | desc                                                | code                   | output |
+|---------+-----------------------------------------------------+------------------------+--------|
+| ~-~     | enable left justification                           |                        |        |
+| ~+~     | precede non-negative number by +                    | ~printf("%+d", 0);~    | +0     |
+| ~SPACE~ | precede non-negative number by SPACE(override by +) | ~printf("·%+d·", 1);~  | · 1·   |
+| ~#~     | misc                                                |                        |        |
+| ~0~     | padding left blank with 0(override by -)            | ~printf("·%04d·", 1);~ | ·0001· |
+** minimum field width
+
+最小宽度，默认如果不够通过加空格补足，或者通过 flag(0) 调整。
+
+可能的值：integer 或 ~*~
+
+当为 * 时，其值从下一个参数获取；当下一个参数为负值时，其负号作为 flag 使用。
+
+#+BEGIN_SRC c
+printf("·%0*d·", 4, 1);
+//=> ·0001·
+printf("·%0*d·%0*d·", 4, 1, 4, 1);
+//=> ·0001·0001·
+printf("·%*d·", -4, 1);
+//=> ·1   ·
+#+END_SRC
+** precision
+
+其语义随所展示数据不同而不同。
+
+| d i o u x X | minimum number of digits(padding 0 if not enough) |
+| a A e E f F | number of digits after the decimal point          |
+| g G         | number of significant digits                      |
+| s           | maximum number of bytes                           |
+
+类似 ~minimum filed width~ ，其可能的值为 integer 或 ~*~
+
+当为 ~*~ 时，其值从下一个参数获取；当下一个参数为负值时，则忽略 precision
+
+如果只有 ~.~ 的话，相当于 precision 为 0
+** length modifier
+
+#+BEGIN_EXAMPLE
+ length modifier  conversion specifier  desc                                  
+------------------------------------------------------------------------------
+ hh               d i o u x X           signed char, unsigned char            
+ hh               n                     signed char *                         
+------------------------------------------------------------------------------
+ h                d i o u x X           short int, unsigned short int         
+ h                n                     short int *                           
+------------------------------------------------------------------------------
+ l                d i o u x X           long int, unsigned long int           
+                  n                     long int *                            
+                  c                     wint_t                                
+                  s                     wchar_t *                             
+                  a A e E f F g G       no effect                             
+------------------------------------------------------------------------------
+ ll               d i o u x X           long long int, unsigned long long int 
+                  n                     long long int *                       
+------------------------------------------------------------------------------
+ j                d i o u x X           intmax_t, uintmax_t                   
+                  n                     intmax_t *                            
+------------------------------------------------------------------------------
+ z                d i o u x X           size_t                                
+                  n                     size_t *                              
+------------------------------------------------------------------------------
+ t                d i o u x X           ptrdiff_t                             
+                  n                     ptrdiff_t *                           
+------------------------------------------------------------------------------
+ L                a A e E f F g G       long double                           
+#+END_EXAMPLE
+
+** conversion specifier
+
+| conversion specifier | desc                                                                                   | example              |
+|----------------------+----------------------------------------------------------------------------------------+----------------------|
+| d i                  | show int in decimal form                                                               |                      |
+| o u x X              | show unsigned int in octal(o), decimal(u) and hex(xX) form respectively                |                      |
+| f F                  | show double in decimal form                                                            |                      |
+| e E                  | show double with scientific notation(6 digits precision as default)                    | 3.123000e23          |
+| g G                  | same to eE or fF depends                                                               |                      |
+| a A                  | show double in hexadecimal scientific notation ([-]h.hhhhp±d)                          | 0x1.6947ae147ae14p+3 |
+| c                    | show int as an unsigned character                                                      | A                    |
+| s                    | string                                                                                 |                      |
+| p                    | pointer                                                                                |                      |
+| n                    | no output, store number of character written so far into corresponding argument(int *) |                      |
+| %                    | character '%'                                                                          |                      |
+
+(*f F e E g G a and A are also used to output float due to promotion)
+
+*** %d vs. %i
+
+[[https://stackoverflow.com/questions/1893490/what-is-the-difference-between-conversion-specifiers-i-and-d-in-formatted-io-f][What is the difference between conversion specifiers %i and %d in formatted IO functions]]
+* ref
+
+1. /C Programming: A Modern Approach/ by K. N. King

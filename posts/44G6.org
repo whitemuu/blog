@@ -3,15 +3,35 @@
 #+DATE: 2019-04-10T14:00:06CST
 #+TAGS: bash shell unix pl grammar
 
-* variable
+* shebang
+
+etymology: #! sharp bang!
+
+#+BEGIN_SRC bash
+#!/bin/bash
+
+# or
+#!/usr/bin/env bash
+#+END_SRC
+
+** using of env
+
+get the bash of your $PATH. Downside is that you cannot pass an additional
+argument to the interpreter like:
+
+#+BEGIN_SRC bash
+#!/bin/bash -<option>
+#+END_SRC
+* Variables
 
 #+BEGIN_SRC bash
 NAME="John Doe"
 echo $NAME
 echo "$NAME"
-echo ${NAME}
+echo $NAMEx    # cannot discern $NAME
+echo ${NAME}x  # problem solved
 echo "${NAME}"
-echo '$NAME' # no expansion with single quotes
+echo '$NAME'   # no expansion with single quotes
 #+END_SRC
 
 * Control Flow
@@ -57,6 +77,10 @@ fi
 | ~[[ FILE1 -ot FILE2 ]]~ | 2 is more recent than 1 |
 | ~[[ FILE1 -ef FILE2 ]]~ | Same files              |
 
+** [] vs. [[]]
+
+[[https://stackoverflow.com/questions/3427872/whats-the-difference-between-and-in-bash/3427931#3427931][What's the difference between { and {{ in Bash? - Stack Overflow]]
+
 ** Loops
 
 #+BEGIN_SRC bash
@@ -93,10 +117,9 @@ done
 
 #+BEGIN_SRC bash
 # Definition
-function myfunc() { # function keyword is optional
+function myfunc() {  # keyword 'function' is optional
     local surname=$1 middle=$2 last=$3 # local variables
-    # echo "$surname $middle $last"
-    return "$surname $middle $last"
+    echo "$surname $middle $last"
 }
 
 # Usage
@@ -109,11 +132,11 @@ echo $name
 
 ** Arguments
 
-| `$#` | Number of arguments                |
-| `$*` | All arguments                      |
-| `$@` | All arguments, starting from first |
-| `$1` | First argument                     |
-| `$2` | Second argument                    |
+| ~$#~ | Number of arguments                |
+| ~$*~ | All arguments                      |
+| ~$@~ | All arguments, starting from first |
+| ~$1~ | First argument                     |
+| ~$2~ | Second argument                    |
 
 ** get command line arguments
 
@@ -125,6 +148,7 @@ echo $0
 echo $1
 echo $2
 #+END_SRC
+
 
 #+BEGIN_EXAMPLE
 $ ./foo.sh aaa bbb
@@ -145,6 +169,21 @@ else
     echo "failure"
 fi
 #+END_SRC
+* Build-in commands
+
+as of Bash 4.2
+#+BEGIN_EXAMPLE
+:         command    eval      jobs      read        times
+.         compgen    exec      kill      readarray   trap
+[         complete   exit      let       readonly    type
+alias     compopt    export    local     return      typeset
+bg        continue   fc        logout    set         ulimit
+bind      declare    fg        mapfile   shift       umask
+break     dirs       getopts   pushd     shopt       unalias
+builtin   disown     hash      popd      source      unset
+caller    echo       help      pwd       suspend     wait
+cd        enable     history   printf    test
+#+END_EXAMPLE
 
 * Arrays
 
@@ -215,6 +254,22 @@ $( <COMMANDS> )
 expands to <COMMANDS>'s ~stdout~ (executed in a subshell).
 
 All trailing newlines are removed.
+* Output Styling
+
+[[https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters][ANSI escape code::SGR parameters]]
+
+- =\e[<SGR code>[;<SGR code]?m= :: set
+- =\e[0m= :: reset
+
+#+BEGIN_SRC bash
+printf "\e[1;31mbold red\e[0m\n"
+printf "\e[3;97;101msupreme\e[0m\n"
+# or
+echo -e "\e[1;31mbold red\e[0m"
+#+END_SRC
+* Arithmetic
+
+[[http://faculty.salina.k-state.edu/tim/unix_sg/bash/math.html][5.9. Math in Shell Scripts — Introduction to Unix Study Guide]]
 * refs
 
 1. [[https://devhints.io/bash#functions][Bash scripting cheatsheet]]
@@ -224,4 +279,5 @@ All trailing newlines are removed.
 5. [[https://wiki.bash-hackers.org/syntax/expansion/cmdsubst][Command substitution {Bash Hackers Wiki}]]
 6. [[https://google.github.io/styleguide/shell.xml][Shell Style Guide]]
 7. [[https://github.com/icy/bash-coding-style][icy/bash-coding-style: A Bash coding style]]
+8. [[https://stackoverflow.com/questions/39076105/in-bash-shell-how-to-classify-the-usage-of-and][linux - In bash shell, how to classify the usage of (), (()),{}, {{}} and {}? - Stack Overflow]]
 
