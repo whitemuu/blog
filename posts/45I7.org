@@ -67,6 +67,8 @@ MacOS 下使用 =s-SPC= 可以快速在最近两个输入法之间切换，但�
 
 * implement with Hammerspoon
 
+主要思路是调用 cycleIME 方法时开启一个监听器，监听下一次 keystroke，如果仍是切换输入法的组合键，则切换到第三种输入法，否则关闭该监听器。
+
 ~~/.hammerspoon/init.lua~ :
 
 #+BEGIN_SRC lua
