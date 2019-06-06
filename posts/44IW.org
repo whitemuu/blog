@@ -1,7 +1,7 @@
-#+TITLE: printf redux
-#+AUTHOR: angus zhang
+#+TITLE: a Reference for printf
+#+AUTHOR: Angus Zhang
 #+DATE: 2019-04-14T16:06:46CST
-#+TAGS: 
+#+TAGS: stdout C library reference
 
 * intro
 
@@ -18,18 +18,18 @@
 * Conversion Specification
 
 #+BEGIN_EXAMPLE
-%[<flag>][min-width][.<precision>][<length-modifier>]<conversion-specifier>
+%[<flag>][<min-width>][.<precision>][<length-modifier>]<conversion-specifier>
 #+END_EXAMPLE
 
 ** Flags
 
-| flag    | desc                                                | code                   | output |
-|---------+-----------------------------------------------------+------------------------+--------|
-| ~-~     | enable left justification                           |                        |        |
-| ~+~     | precede non-negative number by +                    | ~printf("%+d", 0);~    | +0     |
-| ~SPACE~ | precede non-negative number by SPACE(override by +) | ~printf("·%+d·", 1);~  | · 1·   |
-| ~#~     | misc                                                |                        |        |
-| ~0~     | padding left blank with 0(override by -)            | ~printf("·%04d·", 1);~ | ·0001· |
+| flag    | desc                                                  | code                   | output |
+|---------+-------------------------------------------------------+------------------------+--------|
+| ~-~     | enable left justification                             | ~printf("·%-4d·", 1);~ | ·1   · |
+| ~+~     | precede non-negative number by +                      | ~printf("%+d", 0);~    | +0     |
+| ~SPACE~ | precede non-negative number by SPACE(override by ~+~) | ~printf("·%+d·", 1);~  | · 1·   |
+| ~#~     | misc                                                  |                        |        |
+| ~0~     | padding left blank with 0(override by ~-~)            | ~printf("·%04d·", 1);~ | ·0001· |
 ** minimum field width
 
 最小宽度，默认如果不够通过加空格补足，或者通过 flag(0) 调整。
@@ -66,10 +66,10 @@ printf("·%*d·", -4, 1);
  length modifier  conversion specifier  desc                                  
 ------------------------------------------------------------------------------
  hh               d i o u x X           signed char, unsigned char            
- hh               n                     signed char *                         
+                  n                     signed char *                         
 ------------------------------------------------------------------------------
  h                d i o u x X           short int, unsigned short int         
- h                n                     short int *                           
+                  n                     short int *                           
 ------------------------------------------------------------------------------
  l                d i o u x X           long int, unsigned long int           
                   n                     long int *                            

@@ -1,0 +1,139 @@
+#+TITLE: 让 MacOS 像 Gboard 一样顺滑切换多个输入法
+#+AUTHOR: angus zhang
+#+DATE: 2019-06-06T15:57:20CST
+#+TAGS: hammerspoon gboard macOS IME
+
+* lame default method
+
+MacOS 下使用 =s-SPC= 可以快速在最近两个输入法之间切换，但如果需要切换到第三种输
+入法，则需要按下 =s-SPC= 之后不松开 command(super) 键，等大概一秒之后才出现可供
+选择的输入法列表，切换效率实在不高。
+
+* 另一种可选的方案
+
+通过 Karabiner 可以为每个输入法设置单独的快捷键。
+
+高频率切换需求下，先需要大脑思考想要的输入法对应那个组合键，然后再按下并不容易按的组合键，给我的个人体验并不好。
+
+#+BEGIN_SRC xml
+<!-- input source -->
+<vkchangeinputsourcedef>
+    <name>KeyCode::VK_CHANGE_INPUTSOURCE_SQUIRREL</name>
+    <inputsourceid_equal>com.googlecode.rimeime.inputmethod.Squirrel.Rime</inputsourceid_equal>
+</vkchangeinputsourcedef>
+<vkchangeinputsourcedef>
+    <name>KeyCode::VK_CHANGE_INPUTSOURCE_ENGLISH</name>
+    <inputsourceid_equal>com.apple.keylayout.US</inputsourceid_equal>
+</vkchangeinputsourcedef>
+<vkchangeinputsourcedef>
+    <name>KeyCode::VK_CHANGE_INPUTSOURCE_HIRAGANA</name>
+    <inputsourceid_equal>com.apple.inputmethod.Kotoeri.Japanese</inputsourceid_equal>
+</vkchangeinputsourcedef>
+<vkchangeinputsourcedef>
+    <name>KeyCode::VK_CHANGE_INPUTSOURCE_KATAKANA</name>
+    <inputsourceid_equal>com.apple.inputmethod.Kotoeri.Japanese.Katakana</inputsourceid_equal>
+</vkchangeinputsourcedef>
+<vkchangeinputsourcedef>
+    <name>KeyCode::VK_CHANGE_INPUTSOURCE_CHINESE</name>
+    <inputsourceid_equal>com.apple.inputmethod.SCIM.ITABC</inputsourceid_equal>
+</vkchangeinputsourcedef>
+
+<item>
+    <name>change input resource</name>
+    <identifier>nichijou.remap.english_shortcut</identifier>
+    <autogen>
+        __KeyToKey__
+        KeyCode::1, ModifierFlag::OPTION_L,
+        KeyCode::VK_CHANGE_INPUTSOURCE_ENGLISH,
+    </autogen>
+    <autogen>
+        __KeyToKey__
+        KeyCode::3, ModifierFlag::OPTION_L,
+        KeyCode::VK_CHANGE_INPUTSOURCE_CHINESE,
+    </autogen>
+    <autogen>
+        __KeyToKey__
+        KeyCode::2, ModifierFlag::OPTION_L,
+        KeyCode::VK_CHANGE_INPUTSOURCE_HIRAGANA,
+    </autogen>
+</item>
+#+END_SRC
+
+* the way Gboard works
+
+每次点按小地球，她会在你最近使用的两个输入法间切换，如果切换后你未使用当前输入法进行任何输入，则判定你需要第三种输入法，再按小地球就会切换第三种输入法。
+
+这是我见过的最优雅的切换方案。
+
+* implement with Hammerspoon
+
+~~/.hammerspoon/init.lua~ :
+
+#+BEGIN_SRC lua
+us = "com.apple.keylayout.US"
+ch = "com.apple.inputmethod.SCIM.ITABC"
+jp = "com.apple.inputmethod.Kotoeri.Japanese"
+
+lastIME = ch
+
+function getThirdIME()
+  local currentIMEs = {lastIME, hs.keycodes.currentSourceID()}
+  if not hs.fnutils.contains(currentIMEs, us) then
+	return us
+  elseif not hs.fnutils.contains(currentIMEs, ch) then
+	return ch
+  else
+    return jp
+  end
+end
+
+function cycleIME()
+  print("┌────────────────────")
+  local newCurrent = lastIME
+  lastIME = hs.keycodes.currentSourceID()
+  hs.keycodes.currentSourceID(newCurrent)
+  print("│cycleIME: change to ", newCurrent)
+
+  cycleIMEEventTap:start()
+  kb_cycleIME:disable()
+  print("└────────────────────")
+end
+
+kb_cycleIME = hs.hotkey.bind({"shift", "ctrl", "cmd"}, "I", cycleIME)
+
+
+cycleIMEEventTap = hs.eventtap.new({hs.eventtap.event.types.keyUp}, function (event)
+    print("┌────────────────────")
+    if (event:getKeyCode() == 34) and
+      event:getFlags():containExactly({"shift", "ctrl", "cmd"})
+    then
+      hs.keycodes.currentSourceID(getThirdIME())
+      print("│Event: change to", hs.keycodes.currentSourceID())
+    end
+    cycleIMEEventTap:stop()
+    kb_cycleIME:enable()
+    print("└────────────────────")
+end)
+#+END_SRC
+* 使用 Karabiner 映射到 shift_r
+
+我在 hammerspoon 里设置了四个键的组合键，当然没有打算真把它当日常使用，而是把它当作一个桥梁，把右SHIFT映射到 hammerspoon 里的 =cycleIME= 。
+
+~~/Library/Application Support/Karabiner/private.xml~ :
+
+#+BEGIN_SRC xml
+<item>
+    <name>Shift_R to Shift_R</name>
+    <appendix>(+ When you type Shift_R only, send s-S-C-i)</appendix>
+    <identifier>nichijou.remap.shiftR2shiftRRR</identifier>
+    <autogen>
+        __KeyOverlaidModifier__
+        KeyCode::SHIFT_R,
+        KeyCode::SHIFT_R,
+        KeyCode::I, ModifierFlag::COMMAND_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L
+    </autogen>
+</item>
+#+END_SRC
+* TODO My own issue
+
+暂时和我在Emacs下的相关设置(ESC切换成英文输入法)不兼容。

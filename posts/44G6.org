@@ -25,15 +25,19 @@ argument to the interpreter like:
 * Variables
 
 #+BEGIN_SRC bash
-NAME="John Doe"
-echo $NAME
-echo "$NAME"
-echo $NAMEx    # cannot discern $NAME
-echo ${NAME}x  # problem solved
-echo "${NAME}"
-echo '$NAME'   # no expansion with single quotes
+name="John Doe"
+echo $name
+echo "$name"
+echo $namex    # cannot discern $name
+echo ${name}x  # problem solved
+echo "${name}"
+echo '$name'   # no expansion with single quotes
 #+END_SRC
+** name convention
 
+There’s no standard convention for the naming of shell variables, but all-caps
+names typically suggest environment variables or variables read from global
+configuration files.
 * Control Flow
 
 ** if
