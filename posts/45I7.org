@@ -18,20 +18,12 @@ MacOS 下使用 =s-SPC= 可以快速在最近两个输入法之间切换，但�
 #+BEGIN_SRC xml
 <!-- input source -->
 <vkchangeinputsourcedef>
-    <name>KeyCode::VK_CHANGE_INPUTSOURCE_SQUIRREL</name>
-    <inputsourceid_equal>com.googlecode.rimeime.inputmethod.Squirrel.Rime</inputsourceid_equal>
-</vkchangeinputsourcedef>
-<vkchangeinputsourcedef>
     <name>KeyCode::VK_CHANGE_INPUTSOURCE_ENGLISH</name>
     <inputsourceid_equal>com.apple.keylayout.US</inputsourceid_equal>
 </vkchangeinputsourcedef>
 <vkchangeinputsourcedef>
     <name>KeyCode::VK_CHANGE_INPUTSOURCE_HIRAGANA</name>
     <inputsourceid_equal>com.apple.inputmethod.Kotoeri.Japanese</inputsourceid_equal>
-</vkchangeinputsourcedef>
-<vkchangeinputsourcedef>
-    <name>KeyCode::VK_CHANGE_INPUTSOURCE_KATAKANA</name>
-    <inputsourceid_equal>com.apple.inputmethod.Kotoeri.Japanese.Katakana</inputsourceid_equal>
 </vkchangeinputsourcedef>
 <vkchangeinputsourcedef>
     <name>KeyCode::VK_CHANGE_INPUTSOURCE_CHINESE</name>
@@ -136,6 +128,27 @@ end)
     </autogen>
 </item>
 #+END_SRC
-* TODO My own issue
+* working with Vim
 
-暂时和我在Emacs下的相关设置(ESC切换成英文输入法)不兼容。
+#+BEGIN_SRC lua
+function enIME()
+  lastIME = hs.keycodes.currentSourceID()
+  hs.keycodes.currentSourceID(us)
+end
+hs.hotkey.bind({"shift", "ctrl", "cmd"}, "E", enIME)
+#+END_SRC
+
+#+BEGIN_SRC xml
+<item>
+    <name>XXX</name>
+    <inputsource_not>ENGLISH</inputsource_not>
+    <only>EMACS,TERMINAL,IntelliJ,VI,CLion</only>
+    <identifier>nichijou.remap.other_2_english_by_esc</identifier>
+    <autogen>
+        __KeyToKey__
+        KeyCode::ESCAPE,
+        KeyCode::E, ModifierFlag::COMMAND_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+        KeyCode::ESCAPE,
+    </autogen>
+</item>
+#+END_SRC
