@@ -128,7 +128,11 @@ end)
     </autogen>
 </item>
 #+END_SRC
-* working with Vim
+* Vim
+
+原来仅依靠 karabiner 实现的在 vim 里按 ESC 自动切回英文的设置，因为需要在 hammerspoon 中保存上一个输入法，如今也要借助 hammerspoon 实现.
+
+~~/.hammerspoon/init.lua~ :
 
 #+BEGIN_SRC lua
 function enIME()
@@ -137,6 +141,8 @@ function enIME()
 end
 hs.hotkey.bind({"shift", "ctrl", "cmd"}, "E", enIME)
 #+END_SRC
+
+~~/Library/Application Support/Karabiner/private.xml~ :
 
 #+BEGIN_SRC xml
 <item>
@@ -152,3 +158,33 @@ hs.hotkey.bind({"shift", "ctrl", "cmd"}, "E", enIME)
     </autogen>
 </item>
 #+END_SRC
+* Alfred
+
+Alfred 的行为比较特殊，每次 toggle 她会直接继承上一个应用的输入法，用如下方式在每次使用时将其重置为英文。
+
+~~/.hammerspoon/init.lua~ :
+
+#+BEGIN_SRC lua
+function enIMEForAlfred()
+  local currentAppID = hs.application.frontmostApplication():bundleID()
+  if lastIMEs[currentAppID] == us then lastIMEs[currentAppID] = nil end
+  hs.keycodes.currentSourceID(us)
+end
+hs.hotkey.bind({"shift", "ctrl", "cmd"}, "A", enIMEForAlfred)
+#+END_SRC
+
+~~/Library/Application Support/Karabiner/private.xml~ :
+
+#+BEGIN_SRC xml
+<item>
+    <name>Alfred change to english with hammerspoon</name>
+    <identifier>nichijou.remap.2_english_in_alfred</identifier>
+    <autogen>
+        __KeyToKey__
+        KeyCode::SPACE, ModifierFlag::OPTION_L,
+        KeyCode::SPACE, ModifierFlag::OPTION_L,
+        KeyCode::A, ModifierFlag::COMMAND_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+    </autogen>
+</item>
+#+END_SRC
+
