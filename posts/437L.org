@@ -1,6 +1,6 @@
 #+TITLE: RSS in a nutshell
 #+AUTHOR: angus zhang
-#+DATE: 2019-02-02T17:21:16CST
+#+DATE: 2019-09-01T17:13:19CST
 #+TAGS: in-a-nutshell rss atom
 
 RSS 是 Really Simple Syndication 的首字母缩略词
@@ -188,6 +188,13 @@ sample:
 * Status Quo
 
 推荐月光博客九年前的博文：[[https://www.williamlong.info/archives/2381.html][RSS阅读时代的没落-月光博客]]
+* successor
+
+伴随着 json 在互联网领域慢慢取代 xml 格式的趋势，一种基于 json 的订阅标准也应运而生。
+
+- [[https://jsonfeed.org/][JSON Feed: Home]]
+- [[https://v2ex.com/t/596889#reply17][20190901 - Livid's Weekly Report #8 - V2EX]]
+
 * ref
 
 1. [[https://en.wikipedia.org/wiki/RSS][RSS - Wikipedia]]

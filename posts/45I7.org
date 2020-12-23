@@ -130,7 +130,7 @@ end)
 #+END_SRC
 * Vim
 
-原来仅依靠 karabiner 实现的在 vim 里按 ESC 自动切回英文的设置，因为需要在 hammerspoon 中保存上一个输入法，如今也要借助 hammerspoon 实现.
+原来仅依靠 karabiner 实现的在 vim 里按 ESC 自动切回英文的设置，因为需要在 hammerspoon 中保存上一个输入法，如今也要借助 hammerspoon 实现。
 
 ~~/.hammerspoon/init.lua~ :
 
@@ -162,6 +162,8 @@ hs.hotkey.bind({"shift", "ctrl", "cmd"}, "E", enIME)
 
 Alfred 的行为比较特殊，每次 toggle 她会直接继承上一个应用的输入法，用如下方式在每次使用时将其重置为英文。
 
+Appearance/Options/Focusing 设置为 compatibility mode，使其能够被识别为  frontmost application ([[https://www.alfredforum.com/topic/10673-how-to-make-the-alfred-search-window-a-frontmost-app/][link]])。
+
 ~~/.hammerspoon/init.lua~ :
 
 #+BEGIN_SRC lua
@@ -187,4 +189,8 @@ hs.hotkey.bind({"shift", "ctrl", "cmd"}, "A", enIMEForAlfred)
     </autogen>
 </item>
 #+END_SRC
+* 'Automatically switch to a document's input source' 
 
+[[https://apple.stackexchange.com/questions/168853/automatically-change-input-source][keyboard - Automatically change input source - Ask Different]]
+
+chrome 对该规范的实现对我反倒是个麻烦。

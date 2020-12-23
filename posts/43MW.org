@@ -67,6 +67,6 @@ try {
 }
 #+END_SRC
 
-其问题是很难清楚哪个 handler 对应哪个 expression，可读性并不好。尽管可以借助IDE，终究是个 indirection。
+其问题是很难清楚哪个 handler 对应哪个 expression，可读性并不好。尽管可以借助[[https://twitter.com/lukaseder/status/1147156405687848960][IDE]]，终究是个 indirection。
 
 sigh, 世间竟无完美的解决方案咩？不知其它语言有无良策。

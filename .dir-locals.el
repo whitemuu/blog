@@ -3,5 +3,6 @@
 
 ((org-mode
   (fill-column . 80)
-  (eval . (nichijou/posts-buffer-local-mode))))
+  (eval . (nichijou/posts-buffer-local-mode))
+  (eval . (define-key evil-normal-state-local-map (kbd ", s i") #'nichijou/insert-image-in-blog))))
 
